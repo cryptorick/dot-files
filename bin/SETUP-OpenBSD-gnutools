@@ -1,0 +1,1 @@
+for f in /usr/local/bin/g{*sum,cp,make,install}; do ln -s $f ${f##*/g}; done
