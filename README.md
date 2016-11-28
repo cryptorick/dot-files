@@ -11,4 +11,9 @@ Wow.  dot files.  BFD.
   - `(cd ~/.surf/styles; mv default.css default.css-orig; ln -sf inverted.css default.css)`
 - tabbed -- `pkg_add tabbed`
 - st -- `pkg_add st`
-- other terminals -- `pkg_add sakura`, `pkg_add xfce4-terminal`. Others seem to "heavy" wrt dependencies (not already installed) and disk space.
+- other terminals -- `pkg_add sakura`, `pkg_add xfce4-terminal`. Others seem too "heavy" wrt dependencies (not already installed) and disk space.
+- extra fonts for terminals -- the next procedure will install those fonts into `~/.local/share/fonts`.
+  - `git clone https://github.com/cryptorick/fonts.git powerline-fonts`
+  - `cd powerline-fonts`
+  - `git checkout obsd01` (This is my fix for `install.sh` to work on OpenBSD. Hopefully it will be accepted upstream.)
+  - `sh install.sh`
