@@ -1,0 +1,1 @@
+for f in /usr/local/jdk-1.7.0/bin/java{,c,doc,h,p}; do ln -s $f ${f##*/}; done
