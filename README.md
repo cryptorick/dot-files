@@ -6,6 +6,7 @@ Wow.  dot files.  BFD.
 
 ### OpenBSD
 
+- suckless notes -- the default values of `X11INC = /usr/X11R6/include`, `X11LIB = /usr/X11R6/lib`, `CC = cc` are all OK for OpenBSD.
 - dwm -- build it yourself, so you can `#define MODKEY Mod4Mask`. (source: http://dwm.suckless.org)
 - surf -- `pkg_add surf` will install surf 0.7 (latest) that was built with `static char *cafile = "/etc/ssl/cert.pem";` which is the correct value for OpenBSD.  Run `surf`, so that the `~/.surf` config directory can be created (if it didn't previously exist), and then, see `.surf/` (here) for extra config items. Add those; then run the following.
   - `(cd ~/.surf/styles; mv default.css default.css-orig; ln -sf inverted.css default.css)`
@@ -17,3 +18,9 @@ Wow.  dot files.  BFD.
   - `cd powerline-fonts`
   - `git checkout obsd01` (This is my fix for `install.sh` to work on OpenBSD. Hopefully it will be accepted upstream.)
   - `sh install.sh`
+
+### FreeBSD
+
+- suckless notes -- the following `config.mk` items should be changed to these values.
+  - `X11INC = /usr/local/include/X11`
+  - `X11LIB = /usr/local/lib/X11`
