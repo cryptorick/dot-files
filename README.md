@@ -7,7 +7,7 @@ Wow.  dot files.  BFD.
 ### OpenBSD
 
 - suckless notes -- the default values of `X11INC = /usr/X11R6/include`, `X11LIB = /usr/X11R6/lib`, `CC = cc` are all OK for OpenBSD.
-- dwm -- build it yourself, so you can `#define MODKEY Mod4Mask`. (source: http://dwm.suckless.org)
+- dwm -- build it yourself (`git clone https://git.suckless.org/dwm`), so you can `#define MODKEY Mod4Mask`. Remember, in `Makefile`, to uncomment the line following the line that says `# OpenBSD (uncomment)`.  Heh. Now, you can build.
 - surf -- `pkg_add surf` will install surf 0.7 (latest) that was built with `static char *cafile = "/etc/ssl/cert.pem";` which is the correct value for OpenBSD.  Run `surf`, so that the `~/.surf` config directory can be created (if it didn't previously exist), and then, see `.surf/` (here) for extra config items. Add those; then run the following.
   - `(cd ~/.surf/styles; mv default.css default.css-orig; ln -sf inverted.css default.css)`
 - tabbed -- `pkg_add tabbed`

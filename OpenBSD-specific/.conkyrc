@@ -1,0 +1,68 @@
+alignment top_right
+background no
+border_width 1
+cpu_avg_samples 2
+default_color white
+default_outline_color white
+default_shade_color white
+draw_borders no
+draw_graph_borders yes
+draw_outline no
+draw_shades no
+use_xft yes
+xftfont DejaVu Sans Mono:size=10
+gap_x 5
+gap_y 60
+minimum_size 5 5
+net_avg_samples 2
+no_buffers yes
+out_to_console no
+out_to_stderr no
+extra_newline no
+own_window yes
+own_window_class Conky
+own_window_type dock
+own_window_transparent yes
+own_window_hints below
+stippled_borders 0
+update_interval 3
+uppercase no
+use_spacer none
+show_graph_scale no
+show_graph_range no
+maximum_width 400
+short_units yes
+
+TEXT
+$nodename - $sysname $kernel $machine
+$hr
+${color grey}Uptime:$color $uptime
+${color grey}Frequency (in MHz):$color $freq
+${color grey}Frequency (in GHz):$color $freq_g
+${color grey}RAM Usage:$color $mem/$memmax
+$memperc% ${membar 4}
+${color grey}Swap Usage:$color $swap/$swapmax
+$swapperc% ${swapbar 4}
+${color grey}CPU Usage:$color $cpu%
+${cpubar 4}
+${color grey}Battery:$color ${apm_battery_life} ${color grey}Time Remaining:$color ${apm_battery_time}
+${color grey}Processes:$color $processes  ${color grey}Running:$color $running_processes
+$hr
+${color grey}File system space (freeU/used%):
+ / $color${fs_free /}/${fs_used_perc /}% ${fs_bar 6 /}${color grey}
+ /home $color${fs_free /home}/${fs_used_perc /home}% ${fs_bar 6 /home}${color grey}
+ /tmp $color${fs_free /tmp}/${fs_used_perc /tmp}% ${fs_bar 6 /tmp}${color grey}
+ /var $color${fs_free /var}/${fs_used_perc /var}% ${fs_bar 6 /var}${color grey}
+ /usr $color${fs_free /usr}/${fs_used_perc /usr}% ${fs_bar 6 /usr}${color grey}
+ /usr/X11R6 $color${fs_free /usr/X11R6}/${fs_used_perc /usr/X11R6}% ${fs_bar 6 /usr/X11R6}${color grey}
+ /usr/local $color${fs_free /usr/local}/${fs_used_perc /usr/local}% ${fs_bar 6 /usr/local}${color grey}
+ /usr/obj $color${fs_free /usr/obj}/${fs_used_perc /usr/obj}% ${fs_bar 6 /usr/obj}${color grey}
+ /usr/src $color${fs_free /usr/src}/${fs_used_perc /usr/src}% ${fs_bar 6 /usr/src}${color grey}
+${color grey}Networking:
+Up:$color ${upspeed eth0} ${color grey} - Down:$color ${downspeed eth0}
+$hr
+${color grey}Name              PID   CPU%   MEM%
+${color lightgrey} ${top name 1} ${top pid 1} ${top cpu 1} ${top mem 1}
+${color lightgrey} ${top name 2} ${top pid 2} ${top cpu 2} ${top mem 2}
+${color lightgrey} ${top name 3} ${top pid 3} ${top cpu 3} ${top mem 3}
+${color lightgrey} ${top name 4} ${top pid 4} ${top cpu 4} ${top mem 4}

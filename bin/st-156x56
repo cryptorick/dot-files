@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /usr/local/bin/st -f terminus:size=12 -g 156x56+50+10

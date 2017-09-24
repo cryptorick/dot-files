@@ -1,0 +1,7 @@
+Echinus (window manager) Setup
+
+$ git clone https://github.com/polachok/echinus.git
+$ cd echinus
+$ make
+
+Then, copy the .echinus directory here into ~.  Enjoy!

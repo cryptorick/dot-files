@@ -1,0 +1,4 @@
+#!/bin/sh
+# This while loop is necessary as monsterwm does not
+# have in inherent reload/restart function.
+while /home/rick/builds/monsterwm/monsterwm; do :; done

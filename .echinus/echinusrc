@@ -1,0 +1,143 @@
+Echinus*selected.border: #262626
+Echinus*selected.button: #d3d7cf
+Echinus*selected.bg: #262626
+Echinus*selected.fg: #d3d7cf
+
+Echinus*normal.border: #262626
+Echinus*normal.button: #262626
+Echinus*normal.bg: #262626
+Echinus*normal.fg: #b0b4ac
+
+Echinus*border: 1
+
+Echinus*button.iconify.pixmap: iconify.xbm
+Echinus*button.maximize.pixmap: max.xbm
+Echinus*button.close.pixmap: close.xbm
+
+Echinus*attachaside: 0
+Echinus*sloppy: 1
+Echinus*opacity: 0.8
+Echinus*decoratetiled: 0
+Echinus*hidebastards: 0
+Echinus*mwfact: 0.5
+Echinus*nmaster: 1
+
+Echinus*font: fixed-9
+Echinus*modkey: W
+
+Echinus*deflayout: f
+
+Echinus*gap: 2
+
+Echinus*tags.number: 9
+Echinus*tags.name0: main
+Echinus*tags.name1: m6
+Echinus*tags.name2: emacs
+Echinus*tags.name3: dev
+Echinus*tags.name4: dev2
+Echinus*tags.name5: gfx
+Echinus*tags.name6: misc2
+Echinus*tags.name7: misc
+Echinus*tags.name8: web
+
+# Default layout of tag # is tags.layout#.
+#Echinus*tags.layout1: m
+#Echinus*tags.layout3: b
+
+Echinus*togglestruts: W + b
+Echinus*togglemonitor: W + grave
+Echinus*focusnext: W + j
+Echinus*focusprev: W + k
+Echinus*viewprevtag: W + Tab
+Echinus*viewlefttag: WC + Left
+Echinus*viewrighttag: WC + Right
+Echinus*quit: WS + q
+Echinus*restart: WS + r = echinus
+Echinus*killclient: WS + c
+Echinus*togglefloating: W + space
+Echinus*zoom: W + Return
+
+Echinus*view0: W + 1
+Echinus*view1: W + 2
+Echinus*view2: W + 3
+Echinus*view3: W + 4
+Echinus*view4: W + 5
+Echinus*view5: W + 6
+Echinus*view6: W + 7
+Echinus*view7: W + 8
+Echinus*view8: W + 9
+
+Echinus*tag0: WS + 1
+Echinus*tag1: WS + 2
+Echinus*tag2: WS + 3
+Echinus*tag3: WS + 4
+Echinus*tag4: WS + 5
+Echinus*tag5: WS + 6
+Echinus*tag6: WS + 7
+Echinus*tag7: WS + 8
+Echinus*tag8: WS + 9
+
+Echinus*toggletag0: CWS + 1
+Echinus*toggletag1: CWS + 2
+Echinus*toggletag2: CWS + 3
+Echinus*toggletag3: CWS + 4
+Echinus*toggletag4: CWS + 5
+Echinus*toggletag5: CWS + 6
+Echinus*toggletag6: CWS + 7
+Echinus*toggletag7: CWS + 8
+Echinus*toggletag8: CWS + 9
+
+Echinus*toggleview0: CW + 1
+Echinus*toggleview1: CW + 2
+Echinus*toggleview2: CW + 3
+Echinus*toggleview3: CW + 4
+Echinus*toggleview4: CW + 5
+Echinus*toggleview5: CW + 6
+Echinus*toggleview6: CW + 7
+Echinus*toggleview7: CW + 8
+Echinus*toggleview8: CW + 9
+
+# W + s seems to conflict with movedown binding (see below).
+#Echinus*focusview6: W + s
+
+Echinus*setlayoutm: W + m
+Echinus*setlayoutf: W + f
+Echinus*setlayouti: W + i
+Echinus*setlayoutt: W + t
+# W + w seems to conflict with moveup binding (see below).
+Echinus*setlayoutb: W + v
+
+# These don't seem to work.
+#Echinus*moveright: W + d = 5
+#Echinus*moveleft: W + a = -5
+#Echinus*moveup: W + w = 0 -5
+#Echinus*movedown: W + s = 0 5
+#Echinus*resizedecx: WS + a = 0 0 -5 0
+#Echinus*resizedecy: WS + s = 0 0 0 -5
+#Echinus*resizeincx: WS + d = 0 0 5 0
+#Echinus*resizeincy: WS + w = 0 0 0 5
+# These don't seem to work either. :(
+Echinus*moveright: W + Right = 5
+Echinus*moveleft: W + Left = -5
+Echinus*moveup: W + Up = 0 -5
+Echinus*movedown: W + Down = 0 5
+Echinus*resizedecx: WS + Left = 0 0 -5 0
+Echinus*resizedecy: WS + Down = 0 0 0 -5
+Echinus*resizeincx: WS + Right = 0 0 5 0
+Echinus*resizeincy: WS + Up = 0 0 0 5
+
+Echinus*spawn0: WS + Return = st -f terminus:size=12 -g 100x40
+Echinus*spawn1: W + p = dmenu_run
+
+Echinus*decmwfact: W + h = -0.05
+Echinus*incmwfact: W + l = +0.05
+Echinus*decnmaster: WS + j = -1
+Echinus*incnmaster: WS + k = +1
+
+Echinus*command: st
+
+# rule# class.title tag isfloating hastitle
+Echinus*rule0: Firefox.* web 0 0
+#Echinus*rule1: Emacs.* emacs 1 1
+#Echinus*rule4: Mplayer.* NULL 1 1
+#Echinus*rule5: Gimp.* gfx 1 1
