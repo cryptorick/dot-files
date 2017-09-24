@@ -6,7 +6,8 @@ want to tweak some defaults, better to build it yourself.
 $ git clone git://git.suckless.org/st
 $ cd st
 
-Now, add/change the following two files and re-build.
+Now, add/change the following two files and re-build. (Actually, the
+change to the second file, config.mk, is only for OpenBSD.)
 
 $ diff -U0 config{.def,}.h
 --- config.def.h	Sun Sep 24 11:08:22 2017
@@ -22,6 +23,8 @@ $ diff -U0 config{.def,}.h
 -unsigned int rows = 24;
 +unsigned int cols = 100;
 +unsigned int rows = 40;
+
+**** NOTA BENE: The following is OpenBSD specific.
 
 $ git diff -U0
 diff --git a/config.mk b/config.mk
