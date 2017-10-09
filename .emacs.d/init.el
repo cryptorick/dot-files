@@ -47,7 +47,8 @@
   :bind (("\C-c l" . org-store-link)
          ("\C-c a" . org-agenda)
          ("\C-c c" . org-capture)
-	 ("\C-c b" . org-iswitchb)))
+	 ("\C-c b" . org-iswitchb))
+  :config (load-file (concat user-emacs-directory "lisp/setup-org.el")))
 
 (use-package markdown-mode
   :mode "\\.md\\'"
