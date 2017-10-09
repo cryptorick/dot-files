@@ -1,0 +1,235 @@
+# OpenBSD-cwm-based .cwmrc file
+
+fontname terminus:size=10
+
+# Always assign new window to current group.
+sticky yes
+
+command term "st -f terminus:size=12"
+command lock slock
+
+# Any entry here is shown in the application menu
+#command firefox         firefox
+#command xmms            xmms
+#command top             "xterm -e top"
+
+# Autogroup definitions
+#autogroup 3 "aterm,XTerm"
+#autogroup 3 "xterm,XTerm"
+
+# Ignore programs by that name by not drawing borders around them.
+#ignore XMMS
+#ignore xwi
+#ignore xapm
+#ignore xclock
+
+
+# Key bindings
+
+# (I'm following the default keybindings found in man cwm, mapping M
+# to 4 where appropriate.)
+# 
+# The default key bindings are:
+
+#       CM-Return       Spawn a new terminal.
+unbind-key CM-Return
+bind-key 4S-Return      terminal
+
+#       CM-Delete       Lock the screen.
+unbind-key CM-Delete
+bind-key C4-Delete      lock
+
+#       M-Return        Hide current window.
+unbind-key M-Return
+
+#       M-Down          Lower current window.
+unbind-key M-Down
+
+#       M-Up            Raise current window.
+unbind-key M-Up
+
+#       M-slash         Search for windows.
+unbind-key M-slash
+bind-key 4-slash        menu-window
+
+#       C-slash         Search for applications.
+unbind-key C-slash
+bind-key C4-slash       menu-cmd
+
+#       CM-n            Label current window.
+unbind-key CM-n
+bind-key C4-n           window-menu-label
+
+#       M-Tab           Cycle through currently visible windows.
+unbind-key M-Tab
+bind-key 4-Tab          window-cycle
+
+#       MS-Tab          Reverse cycle through currently visible windows.
+unbind-key MS-Tab
+bind-key 4S-Tab         window-rcycle
+
+#       CM-x            Delete current window.
+unbind-key CM-x
+bind-key 4S-c           window-delete
+
+#       CM-[n]          Toggle visibility of group n, where n is 1-9.
+unbind-key CM-1
+unbind-key CM-2
+unbind-key CM-3
+unbind-key CM-4
+unbind-key CM-5
+unbind-key CM-6
+unbind-key CM-7
+unbind-key CM-8
+unbind-key CM-9
+
+#       CM-a            Toggle visibility of all groups.
+unbind-key CM-a
+bind-key C4-a           group-toggle-all
+
+#       CM-g            Toggle group membership of current window.
+unbind-key CM-g
+bind-key C4-g           window-group
+
+#       M-Right         Cycle through active groups.
+unbind-key M-Right
+bind-key 4-Right        group-cycle
+
+#       M-Left          Reverse cycle through active groups.
+unbind-key M-Left
+bind-key 4-Left         group-rcycle
+
+#       CMS-f           Toggle freezing geometry of current window.
+unbind-key CMS-e
+bind-key C4S-e          window-freeze
+
+#       CM-s            Toggle stickiness of current window.
+unbind-key CM-s
+bind-key C4-s           window-stick
+
+#       CM-f            Toggle full-screen mode of current window.
+unbind-key CM-f
+bind-key C4-f           window-fullscreen
+
+#       CM-m            Toggle maximization of current window.
+unbind-key CM-m
+bind-key C4-m           window-maximize
+
+#       CM-equal        Toggle vertical maximization of current window.
+unbind-key CM-equal
+bind-key C4-equal       window-maximize
+
+#       CMS-equal       Toggle horizontal maximization of current window.
+unbind-key CMS-equal
+bind-key C4S-equal      window-hmaximize
+
+#       M-[hjkl]        Move window by a small amount.
+unbind-key M-h
+unbind-key M-j
+unbind-key M-k
+unbind-key M-l
+bind-key 4-h            window-move-left
+bind-key 4-j            window-move-down
+bind-key 4-k            window-move-up
+bind-key 4-l            window-move-right
+
+#       MS-[hjkl]       Move window by a large amount; see cwmrc(5).
+unbind-key MS-h
+unbind-key MS-j
+unbind-key MS-k
+unbind-key MS-l
+bind-key 4S-h           window-move-left-big 
+bind-key 4S-j           window-move-down-big
+bind-key 4S-k           window-move-up-big
+bind-key 4S-l           window-move-right-big
+
+#       CM-[hjkl]       Resize window by a small amount.
+unbind-key CM-h
+unbind-key CM-j
+unbind-key CM-k
+unbind-key CM-l
+bind-key C4-h           window-resize-left
+bind-key C4-j           window-resize-down
+bind-key C4-k           window-resize-up
+bind-key C4-l           window-resize-right
+
+#       CMS-[hjkl]      Resize window by a large amount; see cwmrc(5).
+unbind-key CMS-h
+unbind-key CMS-j
+unbind-key CMS-k
+unbind-key CMS-l
+bind-key C4S-h          window-resize-left-big
+bind-key C4S-j          window-resize-down-big
+bind-key C4S-k          window-resize-up-big
+bind-key C4S-l          window-resize-right-big
+
+#       M-question      Spawn "exec program" dialog.
+unbind-key M-question
+bind-key 4-question     menu-exec
+
+#       M-period        Spawn "ssh to" dialog.  This parses
+#                       $HOME/.ssh/known_hosts to provide host auto-
+#                       completion.  ssh(1) will be executed via the
+#                       configured terminal emulator.
+unbind-key M-period
+
+#       CM-w            Spawn "exec WindowManager" dialog, allowing a
+#                       switch to another window manager.
+unbind-key CM-w
+
+#       CMS-r           Restart.
+unbind-key CMS-r
+bind-key 4S-r           restart
+
+#       CMS-q           Quit.
+unbind-key CMS-q
+bind-key 4S-q           quit
+
+# Show only group [1-9]
+bind-key 4-1            group-only-1
+bind-key 4-2            group-only-2
+bind-key 4-3            group-only-3
+bind-key 4-4            group-only-4
+bind-key 4-5            group-only-5
+bind-key 4-6            group-only-6
+bind-key 4-7            group-only-7
+bind-key 4-8            group-only-8
+bind-key 4-9            group-only-9
+
+# Hide current window from display and move to group [1-9]
+bind-key 4S-1           window-movetogroup-1
+bind-key 4S-2           window-movetogroup-2
+bind-key 4S-3           window-movetogroup-3
+bind-key 4S-4           window-movetogroup-4
+bind-key 4S-5           window-movetogroup-5
+bind-key 4S-6           window-movetogroup-6
+bind-key 4S-7           window-movetogroup-7
+bind-key 4S-8           window-movetogroup-8
+bind-key 4S-9           window-movetogroup-9
+
+bind-key 4-p            dmenu_run
+
+# Mouse bindings
+
+# (I'm following the default mouse bindings found in man cwm, mapping
+# M to 4 where appropriate.)
+# 
+# The default mouse bindings are:
+
+#       M-M1            Move current window.
+unbind-mouse M-1
+bind-mouse 4-1          window-move
+
+#       CM-M1           Toggle group membership of current window.
+unbind-mouse CM-1
+
+#       M-M2            Resize current window
+unbind-mouse M-2
+bind-mouse 4-2          window-lower
+
+#       M-M3            Lower current window.
+unbind-mouse M-3
+bind-mouse 4-3          window-resize
+
+#       CMS-M3          Hide current window.
+unbind-mouse CMS-3
