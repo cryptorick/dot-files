@@ -1,0 +1,125 @@
+# Portable-cwm-based (i.e., non-OpenBSD) .cwmrc file
+
+## Default cwm keybindings
+
+#	CM-Return       Spawn a new terminal.
+#	CM-Delete       Lock the screen.
+#	M-Return        Hide current window.
+#	M-Down          Lower current window.
+#	M-Up            Raise current window.
+#	M-/             Search for windows.
+#	C-/             Search for applications.
+#	CM-n            Label current window.
+#	M-Tab           Cycle through currently visible windows.
+#	MS-Tab          Reverse cycle through currently visible windows.
+#	CM-x            Delete current window.
+#	CM-[n]          Select group n, where n is 1-9.
+#	CM-0            Select all groups.
+#	CM-g            Toggle group membership of current window.
+#	M-Right         Cycle through active groups.
+#	M-Left          Reverse cycle through active groups.
+#	CMS-f           Toggle freezing geometry of current window.
+#	CM-f            Toggle full-screen size of current window.
+#	CM-=            Toggle vertical maximization of current window.
+#	CMS-=           Toggle horizontal maximization of current window.
+#	M-?             Spawn “exec program” dialog.
+#	M-.             Spawn “ssh to” dialog.  This parses $HOME/.ssh/known_hosts to
+#                   provide host auto-completion.  ssh(1) will be executed via the
+#                   configured terminal emulator.
+#	CM-w            Spawn “exec WindowManager” dialog; allows you to switch from
+#                   cwm to another window manager without restarting the X server.
+#	CMS-r           Restart the running cwm(1).
+#	CMS-q           Quit cwm.
+
+# Change default invocations for terminal and screen lock.
+command term	"st -f terminus:size=12 -g 156x56"
+command lock	slock
+
+fontname terminus
+sticky yes
+ignore conky
+
+# Undo (unmap) some default bindings.
+bind CM-Delete	unmap	# lock
+bind CMS-r	unmap	# restart/reload
+bind CMS-q	unmap	# quit
+bind CM-Return	unmap	# term
+bind CM-x	unmap	# delete
+bind M-Tab	unmap	# cycle
+bind MS-Tab	unmap	# rcycle
+bind M-Up	unmap	# raise
+bind M-Down	unmap	# lower
+bind M-Return	unmap	# hide
+bind CM-equal	unmap	# vmaximize
+bind CMS-equal	unmap	# hmaximize
+bind CM-f	unmap	# fullscreen (???)
+bind M-k	unmap	# moveup
+bind M-j	unmap	# movedown
+bind M-l	unmap	# moveright
+bind M-h	unmap	# moveleft
+bind MS-k	unmap	# bigmoveup
+bind MS-j	unmap	# bigmovedown
+bind MS-l	unmap	# bigmoveright
+bind MS-h	unmap	# bigmoveleft
+bind CM-k	unmap	# resizeup
+bind CM-j	unmap	# resizedown
+bind CM-l	unmap	# resizeright
+bind CM-h	unmap	# resizeleft
+bind CMS-k	unmap	# bigresizeup
+bind CMS-j	unmap	# bigresizedown
+bind CMS-l	unmap	# bigresizeright
+bind CMS-h	unmap	# bigresizeleft
+bind M-period	unmap	# ssh  (Note: M-. doesn't work in this command, but I saw M-. in the man page.)
+
+bind 4-p	dmenu_run
+bind C4-Delete	lock
+bind 4S-Return	terminal
+bind 4-Tab	cycle
+bind 4S-Tab	rcycle
+bind 4S-Right	cyclegroup
+bind 4S-Left	rcyclegroup
+bind 4-x	delete
+bind 4S-c	delete
+bind 4S-r	restart
+bind 4S-q	quit
+bind C4-equal	vmaximize
+bind C4S-equal	hmaximize
+bind 4S-h	htile
+bind 4S-v	vtile
+bind 4S-g	grouptoggle
+
+#unbind-mouse all
+mousebind M-1 unmap
+mousebind M-2 unmap
+mousebind M-3 unmap
+
+mousebind 4-1	window_move
+mousebind 4-3	window_resize
+
+bind 4-1	grouponly1
+bind 4-2	grouponly2
+bind 4-3	grouponly3
+bind 4-4	grouponly4
+bind 4-5	grouponly5
+bind 4-6	grouponly6
+bind 4-7	grouponly7
+bind 4-8	grouponly8
+bind 4-9	grouponly9
+bind 4S-1	movetogroup1
+bind 4S-2	movetogroup2
+bind 4S-3	movetogroup3
+bind 4S-4	movetogroup4
+bind 4S-5	movetogroup5
+bind 4S-6	movetogroup6
+bind 4S-7	movetogroup7
+bind 4S-8	movetogroup8
+bind 4S-9	movetogroup9
+
+borderwidth 1
+color activeborder "#8B0000" # darkred
+color inactiveborder "#555555"
+# gap top bottom left right
+#         Define a "gap" in pixels at the edge of the screen, so that when
+#         a window is maximized it will not overlap this area.
+#gap 0 0 0 180
+
