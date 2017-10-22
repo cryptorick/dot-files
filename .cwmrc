@@ -69,6 +69,14 @@ bind CMS-k	unmap	# bigresizeup
 bind CMS-j	unmap	# bigresizedown
 bind CMS-l	unmap	# bigresizeright
 bind CMS-h	unmap	# bigresizeleft
+bind C-Up	unmap	# ptrmoveup
+bind C-Down	unmap	# ptrmovedown
+bind C-Right	unmap	# ptrmoveright
+bind C-Left	unmap	# ptrmoveleft
+bind CS-Up	unmap	# bigptrmoveup
+bind CS-Down	unmap	# bigptrmovedown
+bind CS-Right	unmap	# bigptrmoveright
+bind CS-Left	unmap	# bigptrmoveleft
 bind M-period	unmap	# ssh  (Note: M-. doesn't work in this command, but I saw M-. in the man page.)
 
 bind 4-p	dmenu_run
