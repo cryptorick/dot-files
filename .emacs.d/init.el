@@ -54,7 +54,7 @@
   (ivy-mode 1))
 
 (use-package counsel
-  ;; BTW, counsel.el is included in ivy (from elpa).
+  :ensure t
   :bind* (("C-x C-f" . counsel-find-file)
           ("C-s"     . swiper))
   :config
