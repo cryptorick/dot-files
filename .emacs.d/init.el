@@ -63,6 +63,10 @@
    '(("f" find-file-other-frame "other frame")
      ("d" delete-file "delete"))))
 
+(use-package which-key
+  :ensure t
+  :config (which-key-mode))
+
 (use-package markdown-mode
   :ensure t
   :mode "\\.md\\'")
