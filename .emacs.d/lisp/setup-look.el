@@ -16,6 +16,9 @@
 ;;   (tool-bar-mode -1)
 ;;   (scroll-bar-mode -1)
 ;;   (and (fboundp 'horizontal-scroll-bar-mode) (horizontal-scroll-bar-mode -1)))
+;;
+;; Hint/Reminder: `M-x describe-font RET` will display your current
+;; font settings.
 
 ;; Display date and time right-justified on the modeline.
 ;;   - From Alan Schmitt's (https://github.com/brabalan) comment on
