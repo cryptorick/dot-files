@@ -70,6 +70,33 @@
    '(("f" find-file-other-frame "other frame")
      ("d" delete-file "delete"))))
 
+(use-package ace-window
+  :ensure t
+  :bind ("C-x o" . ace-window)
+  :config
+  (setq aw-background t
+        aw-keys       '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
+        aw-flip-keys  '("n" "ν"))
+  (add-to-list 'aw-dispatch-alist '(?ν aw-flip-window)))
+
+(use-package eyebrowse
+  :ensure t
+  :config
+  (eyebrowse-mode t)
+  ;; From https://github.com/wasamasa/eyebrowse
+  ;;   The default key bindings are:
+  ;;   | Key bind  | Function                         |
+  ;;   |-----------+----------------------------------|
+  ;;   | C-c C-w < | Switch to previous window config |
+  ;;   | C-c C-w > | Switch to next window config     |
+  ;;   | C-c C-w ' | Switch to last window config     |
+  ;;   | C-c C-w " | Close current window config      |
+  ;;   | C-c C-w , | Rename current window config     |
+  ;;   | C-c C-w 0 | Switch to window config 0        |
+  ;;   | ...       | ...                              |
+  ;;   | C-c C-w 9 | Switch to window config 9        |
+  t)
+
 (use-package which-key
   :ensure t
   :config (which-key-mode))
