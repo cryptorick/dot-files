@@ -1,0 +1,53 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\Classes\txtfile\shell\open\command]
+@="C:\\msys64\\mingw64\\bin\\emacsclientw.exe -cna C:/msys64/mingw64/bin/runemacs.exe \"%1\""
+
+[HKEY_CURRENT_USER\Software\Classes\codefile\DefaultIcon]
+@="%SystemRoot%\system32\imageres.dll,-102"
+
+[HKEY_CURRENT_USER\Software\Classes\codefile\shell\open\command]
+@="C:\\msys64\\mingw64\\bin\\emacsclientw.exe -cna C:/msys64/mingw64/bin/runemacs.exe \"%1\""
+
+[HKEY_CURRENT_USER\Software\Classes\*\shell\Open with Emacs\command]
+@="C:\\msys64\\mingw64\\bin\\emacsclientw.exe -cna C:/msys64/mingw64/bin/runemacs.exe \"%1\""
+
+[HKEY_CURRENT_USER\Software\Classes\*\shell\Open with Emacs (same frame)\command]
+@="C:\\msys64\\mingw64\\bin\\emacsclientw.exe -na C:/msys64/mingw64/bin/runemacs.exe \"%1\""
+
+[HKEY_CURRENT_USER\Software\Classes\.cmake\OpenWithProgIds]
+"codefile"=""
+
+[HKEY_CURRENT_USER\Software\Classes\.c\OpenWithProgIds]
+"codefile"=""
+
+[HKEY_CURRENT_USER\Software\Classes\.h\OpenWithProgIds]
+"codefile"=""
+
+[HKEY_CURRENT_USER\Software\Classes\.cpp\OpenWithProgIds]
+"codefile"=""
+
+[HKEY_CURRENT_USER\Software\Classes\.hpp\OpenWithProgIds]
+"codefile"=""
+
+[HKEY_CURRENT_USER\Software\Classes\.pl\OpenWithProgIds]
+"codefile"=""
+
+[HKEY_CURRENT_USER\Software\Classes\.py\OpenWithProgIds]
+"codefile"=""
+
+[HKEY_CURRENT_USER\Software\Classes\.sh\OpenWithProgIds]
+"codefile"=""
+
+[HKEY_CURRENT_USER\Software\Classes\.awk\OpenWithProgIds]
+"codefile"=""
+
+[HKEY_CURRENT_USER\Software\Classes\.rst\OpenWithProgIds]
+"codefile"=""
+
+[HKEY_CURRENT_USER\Software\Classes\.md\OpenWithProgIds]
+"codefile"=""
+
+[HKEY_CURRENT_USER\Software\Classes\.org\OpenWithProgIds]
+"codefile"=""
+
