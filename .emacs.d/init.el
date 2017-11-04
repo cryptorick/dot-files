@@ -105,6 +105,9 @@
   :ensure t
   :mode "\\.md\\'")
 
-(use-package server :demand
-  :config
-  (or (eq t (server-running-p)) (server-start)))
+;; The command =emacsclient -a "" -c= seems to start a server for you,
+;; i.e., no need for the following lines.  (Check if this is true on
+;; Windoze.)
+;; (use-package server :demand
+;;   :config
+;;   (or (eq t (server-running-p)) (server-start)))
