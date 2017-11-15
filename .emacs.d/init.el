@@ -9,13 +9,6 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 (column-number-mode 1)
 
-;; If on a Windoze system, wire in helpful programs that Windoze
-;; doesn't have by default.
-(when (eq system-type 'windows-nt)
-  (setenv "PATH"
-    (concat (getenv "PATH")
-      "\;C:\\msys64\\usr\\bin")))
-
 ;; Here's where the `setup-*` (and my other) packages are located.
 (add-to-list 'load-path
   (file-name-as-directory (concat user-emacs-directory "lisp")))
@@ -109,9 +102,11 @@
   :ensure t
   :mode "\\.md\\'")
 
+(use-package setup-windoze
+  :if (eq 'windows-nt system-type))
+
 ;; The command =emacsclient -a "" -c= seems to start a server for you,
-;; i.e., no need for the following lines.  (Check if this is true on
-;; Windoze.)
+;; i.e., no need for the following lines.
 ;; (use-package server :demand
 ;;   :config
 ;;   (or (eq t (server-running-p)) (server-start)))
