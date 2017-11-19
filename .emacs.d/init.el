@@ -98,12 +98,27 @@
   :ensure t
   :bind ("C-x g" . magit-status))
 
+(use-package git-gutter
+  :ensure t
+  :config (global-git-gutter-mode 1))
+
 (use-package markdown-mode
   :ensure t
   :mode "\\.md\\'")
 
 (use-package setup-windoze
   :if (eq 'windows-nt system-type))
+
+(defun unfill-region (beg end)
+  "Unfill the region, joining text paragraphs into a single
+logical line.
+
+Source: https://www.emacswiki.org/emacs/UnfillRegion"
+  (interactive "*r")
+  (let ((fill-column (point-max)))
+    (fill-region beg end)))
+
+(define-key global-map "\C-\M-Q" 'unfill-region)
 
 ;; The command =emacsclient -a "" -c= seems to start a server for you,
 ;; i.e., no need for the following lines.
