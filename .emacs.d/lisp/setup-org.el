@@ -25,13 +25,15 @@
           (my-gtd-tickler  :maxlevel . 2))
 
       org-todo-keywords
-        '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)"))
+        '((sequence "TODO(t!)" "WAITING(w@/!)" "|" "DONE(d@)" "CANCELLED(c@)"))
 
       org-agenda-custom-commands
         '(("n" "Agenda and all TODOs" ((agenda "") (alltodo "")))
           ("o" "At the office" tags-todo "@office"
            ((org-agenda-overriding-header "Office")
             (org-agenda-skip-function #'my-org-agenda-skip-all-but-first-actionable)))))
+
+(setq org-log-into-drawer t)
 
 (defun my-org-agenda-skip-all-but-first-actionable ()
   "Skip the entry if is not the first TODO entry (among its
