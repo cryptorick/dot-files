@@ -1,5 +1,3 @@
-(menu-bar-mode -1)
-
 ;; Put the following in ~/.Xresources:
 ;;
 ;;   Emacs.font: terminus-12
@@ -19,6 +17,11 @@
 ;;
 ;; Hint/Reminder: `M-x describe-font RET` will display your current
 ;; font settings.
+
+(and (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+(and (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(and (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(and (fboundp 'horizontal-scroll-bar-mode) (horizontal-scroll-bar-mode -1))
 
 ;; Display date and time right-justified on the modeline.
 ;;   - From Alan Schmitt's (https://github.com/brabalan) comment on
