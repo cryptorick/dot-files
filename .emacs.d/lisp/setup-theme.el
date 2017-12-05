@@ -27,7 +27,8 @@
 (use-package cyberpunk-theme :ensure t :disabled)
 (use-package plan9-theme :ensure t :disabled)
 (use-package occidental-theme :ensure t :disabled)  ; like plan9 but more contrast
-(use-package eclipse-theme :ensure t
+(use-package doom-themes :ensure t :disabled)
+(use-package eclipse-theme :ensure t :disabled
   :config
   ;; Overrride the default background of eclipse (which is white) with
   ;; a yellowish background (plan9 look) stolen from occidental.
