@@ -22,7 +22,11 @@
       '(("gnu"          . "http://elpa.gnu.org/packages/")
         ("org"          . "http://orgmode.org/elpa/")
         ("melpa"        . "http://melpa.org/packages/")
-        ("melpa-stable" . "http://stable.melpa.org/packages/")))
+        ("melpa-stable" . "http://stable.melpa.org/packages/"))
+
+      package-pinned-packages
+      '((use-package . "melpa-stable")
+        (haskell-mode . "melpa-stable")))
 
 (package-initialize)
 (setq load-prefer-newer t)
@@ -124,6 +128,19 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
     (fill-region beg end)))
 
 (define-key global-map "\C-\M-Q" 'unfill-region)
+
+(use-package haskell-mode
+  :ensure t
+  :bind* (("C-`"     . haskell-interactive-bring)  ; this "brings up" the REPL
+          ("C-c C-l" . haskell-process-load-or-reload))
+  :config
+  (require 'haskell-interactive-mode)
+  (require 'haskell-process)
+  (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+  (setq haskell-process-suggest-remove-import-lines t
+        haskell-process-auto-import-loaded-modules t
+        haskell-process-log t
+        haskell-process-type 'stack-ghci))
 
 ;; The command =emacsclient -a "" -c= seems to start a server for you,
 ;; i.e., no need for the following lines.
