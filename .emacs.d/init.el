@@ -9,6 +9,11 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 (column-number-mode 1)
 
+;; Redefine this terrible-terrible standard function as a noop.
+(defun suspend-frame ()
+  (interactive)
+  (message "suspend-frame is suspended! :)"))
+
 ;; Here's where the `setup-*` (and my other) packages are located.
 (add-to-list 'load-path
   (file-name-as-directory (concat user-emacs-directory "lisp")))
