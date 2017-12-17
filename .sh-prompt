@@ -1,0 +1,32 @@
+# Prompts are always a work in progress for me.  :)
+#
+# These prompts have been tested on bash and {pd,m,OpenBSD's }ksh.
+
+one=1
+tilde='~'
+PS1="$ "
+export one tilde PS1
+
+
+#----------------------------------------------------------------
+# No-color prompt
+
+PS1='
+'"$(uname -n | cut -d . -f 1)/$(uname -s)"' ${tilde[0${one#${PWD##"$HOME"*}1}]}${PWD#"$HOME"} ($0)
+[$?] $ '
+
+
+#----------------------------------------------------------------
+# Color prompt (needs .term-color file defining COLOR_* vars)
+
+PS1='
+${COLOR_HOST}'"$(uname -n | cut -d . -f 1)/$(uname -s)"'${COLOR_NONE} ${COLOR_PWD}${tilde[0${one#${PWD##"$HOME"*}1}]}${PWD#"$HOME"}${COLOR_NONE} ($0)
+[$?] $ '
+
+# These next two lines demo the fact that you can change the colors
+# of the elements of (color) PS1 without changing the current value
+# of PS1.
+COLOR_HOST=${COLOR_GREEN}
+COLOR_PWD=${COLOR_YELLOW}
+
+export COLOR_HOST COLOR_PWD
