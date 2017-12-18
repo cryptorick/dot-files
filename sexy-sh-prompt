@@ -1,0 +1,70 @@
+# "Sexy sh prompt" (modeled after "Sexy bash prompt")
+#
+# Tries to work on as many Bourne-style shells as possible.
+#
+# The value of $1 indicates that you want bold colors in the prompt.
+# The value of $2 indicates that you want the git branch to show in the prompt.
+#
+# Example usages:
+#
+# $ . ~/sexy-sh-prompt      # want non-bold colors, no git prompt
+# $ . ~/sexy-sh-prompt 1    # want bold colors, no git prompt
+# $ . ~/sexy-sh-prompt 1 1  # want bold colors and a git prompt
+# $ . ~/sexy-sh-prompt 0 1  # want non-bold colors and a git prompt
+#
+# 0 can be replaced by "" or "NO" and mean the same thing.
+# 1 can be replaced by any value other than 0, "" or "NO" and mean the same thing.
+#
+# Examples:
+#
+# $ . ~/sexy-sh-prompt "Bold" "Git"  # same as: . ~/sexy-sh-prompt 1 1
+# $ . ~/sexy-sh-prompt "" "Git"      # same as: . ~/sexy-sh-prompt 0 1
+
+function _falsy {
+    if [ -z "$1" ] || [ "$1" = "NO" ] || [ "$1" -eq 0 ]; then
+        return 0
+    fi
+    return 1 
+}
+
+if _falsy "$1"; then
+    _fgcolor_bold=0
+else
+    _fgcolor_bold=1
+fi
+
+function _fgcolor {
+    local decimal_color=$1
+    echo -e "\\033[0${_fgcolor_bold};38;5;${decimal_color}m"
+}
+
+if _falsy "$2"; then
+    function __git_ps1 { :; }
+else
+    if [ "${0%ksh}" != "$0" ]; then
+        test -r ~/.git-prompt.ksh && . ~/.git-prompt.ksh
+    else
+        test -r ~/.git-prompt.sh && . ~/.git-prompt.sh
+    fi
+    GIT_PS1_SHOWDIRTYSTATE="${GIT_PS1_SHOWDIRTYSTATE:-1}"
+    export GIT_PS1_SHOWDIRTYSTATE
+fi
+
+one=1
+tilde='~'
+PS1="$ "
+export one tilde PS1
+
+PS1_HOST="$(uname -n | cut -d . -f 1)/$(uname -s)"
+PS1='
+${COLOR_USER}${USER}${COLOR_PS1} at ${COLOR_HOST}${PS1_HOST}${COLOR_PS1} in ${COLOR_PWD}${tilde[0${one#${PWD##"$HOME"*}1}]}${PWD#"$HOME"}${COLOR_PS1}$(__git_ps1 " on ${COLOR_GIT}%s${COLOR_PS1}")
+[$?] $ ${COLOR_NONE}'
+
+COLOR_NONE=$(echo -e "\\033[0m")
+COLOR_PS1=$(_fgcolor 246)
+COLOR_USER=$(_fgcolor 208)
+COLOR_HOST=$(_fgcolor 214)
+COLOR_PWD=$(_fgcolor 190)
+COLOR_GIT=$(_fgcolor 183)
+
+export COLOR_NONE COLOR_PS1 COLOR_USER COLOR_HOST COLOR_PWD COLOR_GIT
