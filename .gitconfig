@@ -3,3 +3,18 @@
 	email = cryptorick@users.noreply.github.com
 [alias]
 	lol = log --all --pretty=oneline --abbrev-commit --graph --decorate
+[color]
+      ui = true
+[color "status"]
+      untracked = cyan
+      changed = "#ffa500"
+      added = "#7fff00"
+[color "diff"]
+      new = "#ffffff #008800"
+      old = "#ffffff #aa0000"
+[color "branch"]
+      remote = "#ff3300"
+[color "decorate"]
+      remotebranch = "#ffa07a"
+      local = "#0000ff bold"
+      branch = "#98fb98 bold"
