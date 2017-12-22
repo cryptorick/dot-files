@@ -151,6 +151,21 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
         haskell-process-log t
         haskell-process-type 'stack-ghci))
 
+(use-package newlisp-mode
+  :ensure t
+  :mode "\\.lsp\\'"
+  :interpreter "newlisp"
+  :config
+  (setq newlisp-command ; <-- default is "newlisp".
+        (or (executable-find "newlisp")
+            ;; Intrinsic Anaphoric If, where are you?
+            (let ((nldir (getenv "NEWLISPDIR")))
+              (if nldir (concat nldir "/newlisp") "newlisp"))))
+  ;; Fix potential tab issue + ensure font lock is enabled.
+  (make-local-variable 'indent-tabs-mode)
+  (setq indent-tabs-mode nil)
+  (turn-on-font-lock))
+
 ;; The command =emacsclient -a "" -c= seems to start a server for you,
 ;; i.e., no need for the following lines.
 ;; (use-package server :demand
