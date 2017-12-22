@@ -26,7 +26,8 @@
 
       package-pinned-packages
       '((use-package . "melpa-stable")
-        (haskell-mode . "melpa-stable")))
+        (haskell-mode . "melpa-stable")
+        (cider . "melpa-stable")))
 
 (package-initialize)
 (setq load-prefer-newer t)
@@ -128,6 +129,14 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
     (fill-region beg end)))
 
 (define-key global-map "\C-\M-Q" 'unfill-region)
+
+(use-package clojure-mode
+  :ensure t
+  :mode "\\.clj\\'")
+
+(use-package cider
+  :ensure t
+  :commands (cider-jack-in cider-connect))
 
 (use-package haskell-mode
   :ensure t
