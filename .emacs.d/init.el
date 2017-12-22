@@ -116,6 +116,10 @@
   :ensure t
   :mode "\\.md\\'")
 
+(use-package rainbow-delimiters
+  :ensure t
+  :config (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+
 (use-package setup-windoze
   :if (eq 'windows-nt system-type))
 
