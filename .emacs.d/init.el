@@ -170,6 +170,72 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
   (setq indent-tabs-mode nil)
   (turn-on-font-lock))
 
+(use-package picolisp
+  ;; Source: https://github.com/tj64/picolisp-mode.git
+  :load-path "~/.emacs.d/contrib/picolisp-mode"
+  :mode ("\\.l\\'" . picolisp-mode)
+  :config
+  (require 'inferior-picolisp)
+  (add-hook 'picolisp-mode-hook
+    (lambda ()
+      (setq picolisp-program-name "/opt/bin/pil")
+      ;;(tsm-mode)
+      (rainbow-delimiters-mode)
+      ;; Restore sane code formatting.
+      (setq picolisp-body-indent 2)
+      (setq picolisp-parsep nil)
+      (defun picolisp-indent-function (indent-point state)
+        ;; For me `picolisp-indent-function' should have the same definition
+        ;; as `lisp-indent-function' except that the properties for
+        ;; indentation should be kept in `picolisp-indent-function', not
+        ;; `lisp-indentation-function', so as not to tinker with the
+        ;; indentation of other lisps (especially elisp).  I can't use TJ's
+        ;; `picolisp-indent-function' because the default indentation is to
+        ;; use the "defform" indent, and I don't like that -- I want the
+        ;; default normal indentation (like for function calls).
+        (let ((normal-indent (current-column)))
+          (goto-char (1+ (elt state 1)))
+          (parse-partial-sexp (point) calculate-lisp-indent-last-sexp 0 t)
+          (if (and (elt state 2)
+                   (not (looking-at "\\sw\\|\\s_")))
+              ;; car of form doesn't seem to be a symbol
+              (progn
+                (if (not (> (save-excursion (forward-line 1) (point))
+                            calculate-lisp-indent-last-sexp))
+                    (progn (goto-char calculate-lisp-indent-last-sexp)
+                           (beginning-of-line)
+                           (parse-partial-sexp (point)
+                                               calculate-lisp-indent-last-sexp 0 t)))
+                (backward-prefix-chars)
+                (current-column))
+              (let ((function (buffer-substring (point)
+                                                (progn (forward-sexp 1) (point))))
+                    method)
+                (setq method (function-get (intern-soft function)
+                                           'picolisp-indent-function))
+                (cond ((or (eq method 'defun)
+                           (and (null method)
+                                (> (length function) 3)
+                                (string-match "\\`def" function)))
+                       (lisp-indent-defform state indent-point))
+                      ((integerp method)
+                       (lisp-indent-specform method state
+                                             indent-point normal-indent))
+                      (method
+                       (funcall method indent-point state)))))))
+      (defmacro def-pil-indent (operator indentation)
+        `(put ',operator 'picolisp-indent-function ',indentation))
+      (def-pil-indent def defun)
+      (def-pil-indent de defun)
+      (def-pil-indent dm defun)
+      (def-pil-indent for defun)
+      (def-pil-indent let 1)
+      (def-pil-indent use 1)
+      (def-pil-indent recur 1)
+      (def-pil-indent until 1)
+      (def-pil-indent unless 1)
+      (def-pil-indent let? 2))))
+
 ;; The command =emacsclient -a "" -c= seems to start a server for you,
 ;; i.e., no need for the following lines.
 ;; (use-package server :demand
