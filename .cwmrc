@@ -77,6 +77,8 @@ bind CS-Up	unmap	# bigptrmoveup
 bind CS-Down	unmap	# bigptrmovedown
 bind CS-Right	unmap	# bigptrmoveright
 bind CS-Left	unmap	# bigptrmoveleft
+bind M-Left	unmap	# rcyclegroup
+bind M-Right	unmap	# cyclegroup
 bind M-period	unmap	# ssh  (Note: M-. doesn't work in this command, but I saw M-. in the man page.)
 
 bind 4-p	dmenu_run
