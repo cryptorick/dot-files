@@ -4,7 +4,8 @@
 
 # terminal emulator
 super + shift + Return
-	urxvt -bg black -fg grey80 -geometry 156x52 -vb
+	st -f terminus:size=12 -g 156x56 -e mksh -l
+#	urxvt -bg black -fg grey80 -geometry 156x52 -vb
 #	st -f terminus:size=12
 
 # program launcher
@@ -28,6 +29,9 @@ super + alt + Escape
 # close and kill
 super + {_,shift + }w
 	bspc node -{c,k}
+
+super + c
+	bspc node -c
 
 # alternate between the tiled and monocle layout
 super + m
