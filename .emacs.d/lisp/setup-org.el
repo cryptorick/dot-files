@@ -3,12 +3,14 @@
 (setq my-gtd-inbox    "~/gtd/inbox.org"
       my-gtd-projects "~/gtd/projects.org"
       my-gtd-tickler  "~/gtd/tickler.org"
-      my-gtd-inactive "~/gtd/someday.org")
+      my-gtd-inactive "~/gtd/someday.org"
+      my-gtd-calendar "~/gtd/calendar.org")
 
 (setq org-agenda-files
         (list my-gtd-inbox
               my-gtd-projects
-              my-gtd-tickler)
+              my-gtd-tickler
+              my-gtd-calendar)
 
       org-capture-templates
         `(("t" "TODO item (goes to inbox)"
