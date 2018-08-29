@@ -61,6 +61,38 @@ be continued (by the agenda builder (the caller))."
 (defun org-current-is-todo ()
   (string= "TODO" (org-get-todo-state)))
 
+;;----------------------------------------------------------------------
+;; Unique ID Wrasslin' (Not used now, but may in the future)
+
+;; Stolen from Rainer Koenig:
+;; https://koenig-haunstetten.de/2016/07/09/code-snippet-for-orgmode-e05s02/
+;; (defun my/org-ensure-all-headlines-have-ids ()
+;;   "Add ID properties to all headlines in the current buffer that
+;; do not already have one."
+;;   (interactive)
+;;   (org-map-entries 'org-id-get-create))
+
+;; (add-hook 'org-mode-hook
+;;   (lambda ()
+;;     (add-hook 'before-save-hook 'my/org-ensure-all-headlines-have-ids nil 'local)))
+
+;; Stolen from Rainer Koenig:
+;; https://koenig-haunstetten.de/2016/07/09/code-snippet-for-orgmode-e05s02/
+;; (defun my/org-copy-id-to-clipboard ()
+;;   "Copy the ID property value to killring, if no ID is there then
+;; create a new unique ID.  This function works only in org-mode
+;; buffers.
+
+;; The purpose of this function is to easily construct id:-type
+;; links to org-mode files. If it's assigned to a key it saves you
+;; marking the text and copying to the killring."
+;;   (interactive)
+;;   (when (eq major-mode 'org-mode)
+;;     (let ((mytmpid (kill-new (org-id-get-create))))
+;;       (message "Copied %s to killring (clipboard)" mytmpid))))
+
+;;(global-set-key (kbd "<f5>") 'my/org-copy-id-to-clipboard)
+
 (custom-set-faces
   ;; Change the org title and headlines to normal size text (when the
   ;; theme tries to make them bigger, e.g. cyberpunk does this).
