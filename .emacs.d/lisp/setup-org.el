@@ -36,6 +36,7 @@
             (org-agenda-skip-function #'my-org-agenda-skip-all-but-first-actionable)))))
 
 (setq org-log-into-drawer t)
+(setq org-agenda-skip-scheduled-if-deadline-is-shown 'repeated-after-deadline)
 
 (defun my-org-agenda-skip-all-but-first-actionable ()
   "Skip the entry if is not the first TODO entry (among its
@@ -102,6 +103,14 @@ be continued (by the agenda builder (the caller))."
   '(org-level-1 ((t (:height 1.0))))
   '(org-level-2 ((t (:height 1.0))))
   '(org-level-3 ((t (:height 1.0)))))
+
+;; Allow trailing "s" in org emphasis markup, e.g. "Put =defun=s in
+;; top level."
+;; Idea found in this solution (to a slighly differnet issue):
+;; https://stackoverflow.com/questions/16443386/how-to-escape-double-quote/23600071#23600071
+(setf (nth 1 org-emphasis-regexp-components)
+      (concat (nth 1 org-emphasis-regexp-components) "s"))
+(org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
 
 (require 'hydra)
 

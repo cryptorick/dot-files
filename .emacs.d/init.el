@@ -236,6 +236,14 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
       (def-pil-indent unless 1)
       (def-pil-indent let? 2))))
 
+;; Maybe move this to setup-org.el.
+(use-package ox-hugo
+  :ensure t            ;Auto-install the package from Melpa (optional)
+  :after ox
+  ;;:config
+  ;;(use-package ox-hugo-auto-export) ;If you want the auto-exporting on file saves
+)
+
 ;; The command =emacsclient -a "" -c= seems to start a server for you,
 ;; i.e., no need for the following lines.
 ;; (use-package server :demand
