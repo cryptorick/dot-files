@@ -239,10 +239,9 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
 ;; Maybe move this to setup-org.el.
 (use-package ox-hugo
   :ensure t            ;Auto-install the package from Melpa (optional)
-  :after ox
-  ;;:config
-  ;;(use-package ox-hugo-auto-export) ;If you want the auto-exporting on file saves
-)
+  :config
+  (use-package ox-hugo-auto-export)
+  (setq-default org-hugo-auto-export-on-save t))
 
 ;; The command =emacsclient -a "" -c= seems to start a server for you,
 ;; i.e., no need for the following lines.
