@@ -13,7 +13,7 @@ bspc config gapless_monocle      true
 bspc config click_to_focus       true
 
 bspc rule -a Gimp desktop='^7' state=floating follow=on
-bspc rule -a firefox desktop='^9'
+bspc rule -a Firefox state=floating
 bspc rule -a mplayer2 state=floating
 bspc rule -a Kupfer.py focus=on
 bspc rule -a Screenkey manage=off
