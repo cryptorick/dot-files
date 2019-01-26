@@ -34,4 +34,12 @@
                                  'display-time-string))
 (display-time-update)
 
+;; Set transparency to 90%
+(when (display-graphic-p)
+  (defun transparency (value)
+    "Sets the transparency of the frame window. 0=transparent/100=opaque"
+    (interactive "nTransparency Value 0 - 100 opaque: ")
+    (set-frame-parameter (selected-frame) 'alpha value))
+  (set-frame-parameter (selected-frame) 'alpha 90))
+
 (provide 'setup-look)

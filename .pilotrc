@@ -1,0 +1,5 @@
+: ${DISTRODIR:=~/distros/picolisp}
+: ${BUILDDIR:=~/builds}
+: ${DLCMD:=fetch}
+: ${PREFIX:=~/local}
+#: ${PRIV_ELEVATE_CMD:=sudo} # don't set this -- you're installing to ~
