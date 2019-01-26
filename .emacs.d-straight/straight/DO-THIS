@@ -1,0 +1,1 @@
+mkdir -p repos && cd repos && git clone https://github.com/raxod502/straight.el.git && cd straight.el && git checkout master
