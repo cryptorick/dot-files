@@ -20,7 +20,7 @@
 # $ . ~/sexy-sh-prompt "Bold" "Git"  # same as: . ~/sexy-sh-prompt 1 1
 # $ . ~/sexy-sh-prompt "" "Git"      # same as: . ~/sexy-sh-prompt 0 1
 
-function _falsy {
+_falsy () {
     if [ -z "$1" ] || [ "$1" = "NO" ] || [ "$1" -eq 0 ]; then
         return 0
     fi
@@ -33,13 +33,13 @@ else
     _fgcolor_bold=1
 fi
 
-function _fgcolor {
+_fgcolor () {
     local decimal_color=$1
     echo -e "\\033[0${_fgcolor_bold};38;5;${decimal_color}m"
 }
 
 if _falsy "$2"; then
-    function __git_ps1 { :; }
+    __git_ps1 () { :; }
 else
     if [ "${0%ksh}" != "$0" ]; then
         test -r ~/.git-prompt.ksh && . ~/.git-prompt.ksh
