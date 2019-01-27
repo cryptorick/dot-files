@@ -20,6 +20,13 @@
 # $ . ~/sexy-sh-prompt "Bold" "Git"  # same as: . ~/sexy-sh-prompt 1 1
 # $ . ~/sexy-sh-prompt "" "Git"      # same as: . ~/sexy-sh-prompt 0 1
 
+# dash can't do these fancy prompts the way we like to do them; so for
+# dash, set a simple prompt and bail.
+if [ "${0%dash}" != "$0" ]; then
+    PS1="$ "
+    return 0
+fi
+
 _falsy () {
     if [ -z "$1" ] || [ "$1" = "NO" ] || [ "$1" -eq 0 ]; then
         return 0
