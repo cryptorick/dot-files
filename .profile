@@ -1,4 +1,4 @@
-PATH=$HOME/bin:$HOME/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/games:/usr/local/sbin:/usr/local/bin; export PATH
+PATH=$HOME/bin:$HOME/local/bin:$PATH
 
 # set ENV to a file invoked each time sh is started for interactive use.
 ENV=$HOME/.shrc; export ENV
