@@ -250,6 +250,37 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
 
 (define-key global-map "\C-\M-Q" 'unfill-region)
 
+(use-package term  ; emacs provided
+  :config
+  ;; Kill the term buffer when you exit the shell. (That's how eshell
+  ;; does it and how terminal emulator programs outside of Emacs do
+  ;; it, and I like that.)
+  (defadvice term-handle-exit
+      (after term-kill-buffer-on-exit activate)
+    (kill-buffer)))
+
+;; (use-package xterm-color
+;;   :straight t
+;;   :config
+;;   ;; Instructions from: https://github.com/atomontage/xterm-color
+;;   ;; Don't forget to set TERM accordingly (xterm-256color).
+;;   (setq comint-output-filter-functions
+;;         (remove 'ansi-color-process-output comint-output-filter-functions))
+;;   (add-hook 'shell-mode-hook
+;;     (lambda () (add-hook 'comint-preoutput-filter-functions 'xterm-color-filter nil t)))
+;; )
+(use-package eterm-256color
+  :straight (:host github
+             :branch "devel"
+             :repo "dieggsy/eterm-256color"
+             :files ("eterm-256color.el" "eterm-256color.ti"))
+  :hook (term-mode . eterm-256color-mode))
+(use-package xterm-color
+  :straight t
+  :commands xterm-color-filter
+  :hook ((eshell-before-prompt . (lambda ()
+                                   (setq xterm-color-preserve-properties t)))))
+
 (use-package clojure-mode
   :straight t
   :mode "\\.clj\\'")
