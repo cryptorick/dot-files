@@ -160,9 +160,7 @@ Inserted by installing org-mode or when a release is made."
 ;; Maybe move this to setup-org.el.
 (use-package ox-hugo
   :straight t
-  :config
-  (use-package ox-hugo-auto-export)
-  (org-hugo-auto-export-mode))
+  :after ox)
 
 (use-package ox-mediawiki :straight t)
 
