@@ -432,6 +432,149 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
    ;; on how to store that password in an authinfo file.)
 )
 
+;;----------------------------------------------------------------------
+;; exwm
+
+(use-package exwm
+  :straight t
+  :demand t)
+
+(use-package exwm-config
+  :demand t
+  :after exwm)
+
+(use-package exwm-input
+  :demand t
+  :after exwm
+  :config
+  ;; Bind C-q so that the next key is sent literally to the
+  ;; application                    ; from: DamienCassou
+  (add-to-list 'exwm-input-prefix-keys ?\C-q)
+  (define-key exwm-mode-map [?\C-q] #'exwm-input-send-next-key)
+
+  (setq exwm-workspace-number 9     ; from: technomancy
+        exwm-workspace-show-all-buffers t
+        exwm-layout-show-all-buffers t)
+
+  ;; Key bindings accessible from everywhere:
+  (exwm-input-set-key (kbd "s-r") #'exwm-reset)
+  ;; Bind "s-w" to switch workspace interactively.
+  (exwm-input-set-key (kbd "s-w") #'exwm-workspace-switch)
+  ;; Bind "s-0" to "s-9" to switch to a workspace by its index.
+  (dolist (i (number-sequence 0 9))
+    (exwm-input-set-key `,(kbd (format "s-%d" i))
+                        `(lambda ()
+                           (interactive)
+                           (exwm-workspace-switch-create ,i))))
+  (exwm-input-set-key (kbd "<s-tab>") #'other-window)
+
+  ;; switch focus of buffers with s-[hjkl]   ; from: reddit/u/nice_handbasket
+  (exwm-input-set-key (kbd "s-<left>") #'windmove-left)
+  (exwm-input-set-key (kbd "s-<down>") #'windmove-down)
+  (exwm-input-set-key (kbd "s-<up>") #'windmove-up)
+  (exwm-input-set-key (kbd "s-<right>") #'windmove-right)
+  ;; swap buffers with C-s-[hjkl]
+  ;; (exwm-input-set-key (kbd "C-s-h")
+  ;;   (lambda () (interactive) (aw-swap-window (window-in-direction 'left))))
+  ;; (exwm-input-set-key (kbd "C-s-j")
+  ;;   (lambda () (interactive) (aw-swap-window (window-in-direction 'below))))
+  ;; (exwm-input-set-key (kbd "C-s-k")
+  ;;   (lambda () (interactive) (aw-swap-window (window-in-direction 'above))))
+  ;; (exwm-input-set-key (kbd "C-s-l")
+  ;;   (lambda () (interactive) (aw-swap-window (window-in-direction 'right))))
+  (exwm-input-set-key (kbd "s-[") #'shrink-window-horizontally)
+  (exwm-input-set-key (kbd "s-{") #'shrink-window)
+  (exwm-input-set-key (kbd "s-]") #'enlarge-window-horizontally)
+  (exwm-input-set-key (kbd "s-}") #'enlarge-window)
+  
+  (exwm-input-set-key (kbd "s-c") #'kill-this-buffer)
+
+  ;; whenever I start using floating setup   ; from: gh/Ambrevar
+  (add-hook 'exwm-floating-setup-hook 'exwm-layout-hide-mode-line)
+  (add-hook 'exwm-floating-exit-hook 'exwm-layout-show-mode-line)
+
+  (defun my/trim-non-ff ()          ; from: technomancy
+    (delete-if-not (lambda (name)
+                     (or (string-match "- Mozilla Firefox$" name)
+                         (string-match "Chromium" name)))
+                   ido-temp-list))
+
+  (add-hook 'exwm-update-title-hook ; from: technomancy
+            (lambda ()
+              (when (or (string-match "Firefox" exwm-class-name)
+                        (string-match "st-256" exwm-class-name))
+                (exwm-workspace-rename-buffer exwm-title))))
+  
+  (add-hook 'exwm-manage-finish-hook; from: technomancy
+            (lambda ()
+              (when (string-match "st-256" exwm-class-name)
+                (exwm-input-release-keyboard))
+              ;; (when (string-match "Chromium" exwm-class-name)
+              ;;   (exwm-layout-hide-mode-line))
+              ;; (when (string-match "Firefox" exwm-class-name)
+              ;;   (setq ido-make-buffer-list-hook 'my/trim-non-ff)
+              ;;   (exwm-layout-hide-mode-line))
+              ))
+
+  ;;(exwm-enable-ido-workaround)      ; from: technomancy
+  (defun my/exwm-run (command)      ; from: technomancy
+    (interactive (list (read-shell-command "$ ")))
+    (start-process-shell-command command nil command))
+  (define-key exwm-mode-map (kbd "s-p") 'my/exwm-run)
+  (global-set-key (kbd "s-p") 'my/exwm-run)
+
+  ;; Hotkeyed apps                  ; idea from: technomancy
+  (dolist (k '(("s-l" "slock")
+               ("s-<return>" "/usr/home/rick/builds/xst/xst -A 220 -f terminus:size=12 -g 156x56 -e mksh -l")
+               ("s-S-<return>" "st -f terminus:size=12 -g 156x56 -e mksh -l")))
+    (exwm-input-set-key `,(kbd (car k))
+                        `(lambda () (interactive)
+                           (save-window-excursion
+                             (start-process-shell-command ,(cadr k) nil ,(cadr k))))))
+
+  (exwm-input-set-key (kbd "s-m p") #'emms)
+  (exwm-input-set-key (kbd "s-m b") #'emms-smart-browse)
+  (exwm-input-set-key (kbd "s-m r") #'emms-player-mpd-update-all-reset-cache)
+  (exwm-input-set-key (kbd "<XF86AudioPrev>") #'emms-previous)
+  (exwm-input-set-key (kbd "<XF86AudioNext>") #'emms-next)
+  (exwm-input-set-key (kbd "<XF86AudioPlay>") #'emms-pause)
+  (exwm-input-set-key (kbd "<XF86AudioStop>") #'emms-stop)
+  (exwm-input-set-key (kbd "s-m P") #'emms-pause)
+
+  (setq exwm-input-simulation-keys  ; from: DamienCassou
+        `(
+          ;; movement
+          ([?\C-b] . [left])
+          ([?\M-b] . [C-left])
+          ([?\C-f] . [right])
+          ([?\M-f] . [C-right])
+          ([?\C-p] . [up])
+          ([?\C-n] . [down])
+          ([?\C-a] . [home])
+          ([?\M-<] . [C-home])
+          ([?\M->] . [C-end])
+          ([?\C-e] . [end])
+          ([?\M-v] . [prior])
+          ([?\C-v] . [next])
+          ([?\C-d] . [delete])
+          ([?\C-k] . [S-end ?\C-x])
+          ;; cut/paste, selection
+          ([?\C-w] . [?\C-x])
+          ([?\M-w] . [?\C-c])
+          ([?\C-y] . [?\C-v])
+          ([?\M-d] . [C-S-right ?\C-x])
+          ([M-backspace] . [C-S-left ?\C-x])
+          ;; search
+          ([?\C-s] . [?\C-f])
+          ;; misc
+          ([?\C-g] . [escape])
+          ([?\C-i] . [tab])
+          ([?\C-m] . [return])))
+
+  (exwm-enable)
+  ;;(exwm-config-ido)
+  (exwm-config-misc))
+
 ;; The command =emacsclient -a "" -c= seems to start a server for you,
 ;; i.e., no need for the following lines.
 ;; (use-package server :demand
