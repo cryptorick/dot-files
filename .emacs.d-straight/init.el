@@ -79,7 +79,7 @@ _R_ebuild package |_P_ull package  |_V_ersions thaw  |_W_atcher quit    |pru_n_e
   ("g" straight-get-recipe)
   ("n" straight-prune-build)
   ("q" nil))
-
+(define-key global-map (kbd "<f8>") 'hydra-straight-helper/body)
 
 ;;----------------------------------------------------------------------
 ;; org
@@ -122,7 +122,9 @@ Inserted by installing org-mode or when a release is made."
   :bind (("\C-c l" . org-store-link)
          ("\C-c a" . org-agenda)
          ("\C-c c" . org-capture)
-         ("\C-c b" . org-iswitchb))
+         ("\C-c b" . org-iswitchb)
+         ("<f9>"   . org-agenda)
+         ("<f12>"  . org-capture))
   :config
   (require 'org-tempo)  ; for insertion of blocks, a la type "<s" then hit TAB.
   (use-package setup-org))
@@ -187,7 +189,7 @@ Inserted by installing org-mode or when a release is made."
    '(("f" find-file-other-frame "other frame")
      ("d" delete-file "delete"))))
 
-(use-package ace-window
+(use-package ace-window :disabled ; in favor of exwm workflow
   :straight t
   :bind ("C-x o" . ace-window)
   :config
@@ -196,7 +198,7 @@ Inserted by installing org-mode or when a release is made."
         aw-flip-keys  '("n" "ν"))
   (add-to-list 'aw-dispatch-alist '(?ν aw-flip-window)))
 
-(use-package eyebrowse
+(use-package eyebrowse :disabled ; in favor of exwm workflow
   :straight t
   :config
   (eyebrowse-mode t)
@@ -435,6 +437,12 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
 (use-package emms
   :straight t
   :config
+  ;; First, ensure mpd (server) is running.  It's enough to:
+  ;; $ mpd
+  ;; mpd will start in the background (i.e., typing `&` after the
+  ;; command is unnecessary).  So, you can invoke this on an as-needed
+  ;; basis (on the command line) or add the above invocation to your
+  ;; .xinitrc.  Note: on FreeBSD, the command is called `musicpd`.
   (require 'emms-setup)
   (require 'emms-player-mpd)
   (emms-all) ; don't change this to values you see on stackoverflow questions if you expect emms to work
@@ -442,15 +450,42 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
   (setq emms-player-list '(emms-player-mpd))
   (setq emms-info-functions '(emms-info-mpd))
   (setq emms-volume-change-function #'emms-volume-mpd-change)
-  (require 'mpc) ; already included in Emacs; require probably unnecessary.
-  (setq mpc-host (expand-file-name "~/.mpd/socket"))
+  ;; Following 2 lines maybe unnecessary: `ag mpc` yields no hits in the emms source tree.
+  ;;(require 'mpc) ; already included in Emacs; require probably unnecessary.
+  ;;(setq mpc-host (expand-file-name "~/.mpd/socket"))
   (setq emms-player-mpd-server-nameq (expand-file-name "~/.mpd/socket")) ; default: "localhost"
   (setq emms-player-mpd-server-port nil)                                 ; default: "6600"
   ;;(setq emms-source-file-default-directory (expand-file-name "~/Music/"))
+  (defun my/emms-volume-adjust (inc)
+    (interactive "p")
+    (let ((ev last-command-event)
+	  (echo-keystrokes nil))
+      (let* ((base (event-basic-type ev))
+             (inc (or inc emms-volume-change-amount))
+             (step
+              (pcase base
+                ((or ?+ ?=) inc)
+                (?- (- inc))
+                (_ inc))))
+        (funcall emms-volume-change-function step)
+        (message "Use +,- for further adjustment")
+        (set-transient-map
+         (let ((map (make-sparse-keymap)))
+           (dolist (key '(?- ?+ ?=))
+             (define-key map (vector (list key))
+               `(lambda () (interactive) (my/emms-volume-adjust (abs ,inc)))))
+           map)))))
   :bind
-  ("s-m p" . emms)
-  ("s-m b" . emms-smart-browse)
-  ("s-m r" . emms-player-mpd-update-all-reset-cache)
+  ("s-m c" . emms-player-mpd-connect-function) ; this re-connects emms to the running mpd
+  ("s-m p" . emms)              ; this pops-up the playlist
+  ("s-m b" . emms-smart-browse) ; this pops-up the browser (from where you can build playlist)
+  ("s-m r" . emms-player-mpd-update-all-reset-cache) ; this tells mpd to scan for updated
+                                                     ; files in the music directory
+  ("s-m P" . emms-pause)
+  ("s-m s" . emms-stop)
+  ("s-m +" . my/emms-volume-adjust)
+  ("s-m =" . my/emms-volume-adjust)
+  ("s-m -" . my/emms-volume-adjust)
   ("<XF86AudioPrev>" . emms-previous)
   ("<XF86AudioNext>" . emms-next)
   ("<XF86AudioPlay>" . emms-pause)
@@ -512,6 +547,7 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
   (exwm-input-set-key (kbd "s-}") #'enlarge-window)
   
   (exwm-input-set-key (kbd "s-c") #'kill-this-buffer)
+  (exwm-input-set-key (kbd "s-f") #'exwm-floating-toggle-floating)
 
   ;; whenever I start using floating setup   ; from: gh/Ambrevar
   (add-hook 'exwm-floating-setup-hook 'exwm-layout-hide-mode-line)
@@ -543,11 +579,12 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
   ;;(exwm-enable-ido-workaround)      ; from: technomancy
   (defun my/exwm-run (command)      ; from: technomancy
     (interactive (list (read-shell-command "$ ")))
-    (start-process-shell-command command nil command))
-  (define-key exwm-mode-map (kbd "s-p") 'my/exwm-run)
-  (global-set-key (kbd "s-p") 'my/exwm-run)
+    (save-window-excursion
+      (start-process-shell-command command "*my/exwm-run Log*" command)))
+  (define-key exwm-mode-map (kbd "s-SPC") 'my/exwm-run)
+  (global-set-key (kbd "s-SPC") 'my/exwm-run)
 
-  ;; Hotkeyed apps                  ; idea from: technomancy
+  ;; Launch apps from hotkeys       ; idea from: technomancy
   (dolist (k '(("s-l" "slock")
                ("s-<return>" "/usr/home/rick/builds/xst/xst -A 220 -f terminus:size=12 -g 156x56 -e mksh -l")
                ("s-S-<return>" "st -f terminus:size=12 -g 156x56 -e mksh -l")))
@@ -556,18 +593,63 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
                            (save-window-excursion
                              (start-process-shell-command ,(cadr k) nil ,(cadr k))))))
 
+  ;; Add dmenu_run-like functionality (often mistakenly called
+  ;; "dmenu-like" functionality, as this next package does).
+  (use-package dmenu
+    :straight t
+    :config
+    (setq dmenu-history-size 0))
+  (define-key exwm-mode-map (kbd "s-p") 'dmenu)
+  (global-set-key (kbd "s-p") 'dmenu)
+  
+  ;; Use plan8port plumb(1) for plumbing. Note: you need to start
+  ;; plumber(1), the server, first (e.g., M-x my/start-plumber).
+  ;; No worky:
+  (defun my/start-plumber ()
+    (interactive)
+    (save-window-excursion
+      (let ((save-env process-environment))
+        (setenv "PLAN9" "/usr/local/plan9")
+        (setenv "PATH" (concat (getenv "PLAN9") "/bin:" (getenv "PATH")))
+        (message (getenv "PATH"))
+        (start-process "Plan9Plumber" (get-buffer-create "*Plumber Log*") "plumber")
+        (setq process-environment save-env))))
+  ;; No worky:
+  (defun my/plumber ()
+    (interactive)
+    (save-window-excursion
+      (let ((cmd "9 plumber"))
+        (start-process-shell-command cmd nil cmd))))
+  (defun my/plumb ()
+    (interactive)
+    (save-window-excursion
+      (let ((cmd (concat "9 plumb " (gui-get-primary-selection))))
+        (start-process-shell-command cmd nil cmd))))
+  (exwm-input-set-key (kbd "s-o") #'my/plumb)
+
+  (exwm-input-set-key (kbd "s-m c") #'emms-player-mpd-connect-function)
   (exwm-input-set-key (kbd "s-m p") #'emms)
   (exwm-input-set-key (kbd "s-m b") #'emms-smart-browse)
   (exwm-input-set-key (kbd "s-m r") #'emms-player-mpd-update-all-reset-cache)
+  (exwm-input-set-key (kbd "s-m P") #'emms-pause)
+  (exwm-input-set-key (kbd "s-m s") #'emms-stop)
+  (exwm-input-set-key (kbd "s-m +") #'my/emms-volume-adjust)
+  (exwm-input-set-key (kbd "s-m =") #'my/emms-volume-adjust)
+  (exwm-input-set-key (kbd "s-m -") #'my/emms-volume-adjust)
   (exwm-input-set-key (kbd "<XF86AudioPrev>") #'emms-previous)
   (exwm-input-set-key (kbd "<XF86AudioNext>") #'emms-next)
   (exwm-input-set-key (kbd "<XF86AudioPlay>") #'emms-pause)
   (exwm-input-set-key (kbd "<XF86AudioStop>") #'emms-stop)
-  (exwm-input-set-key (kbd "s-m P") #'emms-pause)
+
+  ;; Some hotkeys I'd like to work in X11 apps also. (Careful: this
+  ;; might shadow the app's own keybinding, when you need whatever
+  ;; function that is and is only accessible from that binding).
+  (exwm-input-set-key (kbd "<f9>")  #'org-agenda)
+  (exwm-input-set-key (kbd "<f12>") #'org-capture)
+  (exwm-input-set-key (kbd "<f8>")  #'hydra-straight-helper/body)
 
   (setq exwm-input-simulation-keys  ; from: DamienCassou
-        `(
-          ;; movement
+        `(;; movement
           ([?\C-b] . [left])
           ([?\M-b] . [C-left])
           ([?\C-f] . [right])
@@ -588,6 +670,7 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
           ([?\C-y] . [?\C-v])
           ([?\M-d] . [C-S-right ?\C-x])
           ([M-backspace] . [C-S-left ?\C-x])
+          ([?\C-x h] . [?\C-a])     ; this should start to work from emacs 26.2+
           ;; search
           ([?\C-s] . [?\C-f])
           ;; misc
@@ -595,9 +678,32 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
           ([?\C-i] . [tab])
           ([?\C-m] . [return])))
 
-  (exwm-enable)
-  ;;(exwm-config-ido)
-  (exwm-config-misc))
+  (defun my/exwm-keyrules-xst ()
+    (if (and exwm-class-name
+             (string-match "^xst-256" exwm-class-name))
+        (exwm-input-set-local-simulation-keys
+         '(([?\C-c] . [?\C-c])
+           ([?\C-d] . [?\C-d])
+           ([?\C-k] . [?\C-k])
+           ([?\C-y] . [?\M-\S-v])
+           ([?\M-w] . [?\M-\S-c])))))
+  (add-hook 'exwm-manage-finish-hook #'my/exwm-keyrules-xst)
+  (defun my/exwm-keyrules-st ()
+    (if (and exwm-class-name
+             (string-match "^st-256" exwm-class-name))
+        (exwm-input-set-local-simulation-keys
+         '(([?\C-c] . [?\C-c])
+           ([?\C-d] . [?\C-d])
+           ([?\C-k] . [?\C-k])
+           ([?\C-y] . [?\C-\S-v])
+           ([?\M-w] . [?\C-\S-c])))))
+  (add-hook 'exwm-manage-finish-hook #'my/exwm-keyrules-st)
+
+;;  (exwm-enable)
+;;  ;;(exwm-config-ido)
+;;  (exwm-config-misc)
+;;  (server-start)
+  )
 
 ;; The command =emacsclient -a "" -c= seems to start a server for you,
 ;; i.e., no need for the following lines.
