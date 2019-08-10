@@ -320,6 +320,26 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
   (setq indent-tabs-mode nil)
   (turn-on-font-lock))
 
+(use-package picolisp-mode :disabled
+  :straight t  ; this is Alexis's (flexibeast) version (in MELPA)
+  :mode ("\\.l\\'" . picolisp-mode)
+  :config
+  ;; Find what we need on $PATH.
+  (setq picolisp-pil-executable       "pil"
+        picolisp-pilindent-executable "pilIndent"
+        picolisp-documentation-directory
+        (expand-file-name
+         (concat
+          (file-name-directory
+           (file-truename
+            (or (executable-find picolisp-pil-executable) "")))
+          "../doc"))
+        picolisp-documentation-unavailable
+        (let ((canary (concat
+                       (file-name-as-directory picolisp-documentation-directory)
+                       "ref.html")))
+          (not (file-readable-p canary)))))
+
 ;; Source: https://github.com/tj64/picolisp-mode.git
 (use-package picolisp
   :straight (picolisp :type git :host github :repo "tj64/picolisp-mode")
