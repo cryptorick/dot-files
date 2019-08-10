@@ -335,10 +335,9 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
             (or (executable-find picolisp-pil-executable) "")))
           "../doc"))
         picolisp-documentation-unavailable
-        (let ((canary (concat
-                       (file-name-as-directory picolisp-documentation-directory)
-                       "ref.html")))
-          (not (file-readable-p canary)))))
+        (not (file-readable-p
+              (concat (file-name-as-directory picolisp-documentation-directory)
+                      "ref.html")))))
 
 ;; Source: https://github.com/tj64/picolisp-mode.git
 (use-package picolisp
