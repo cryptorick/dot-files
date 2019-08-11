@@ -322,7 +322,7 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
 
 (use-package picolisp-mode :disabled
   :straight t  ; this is Alexis's (flexibeast) version (in MELPA)
-  :mode ("\\.l\\'" . picolisp-mode)
+  :mode "\\.l\\'"
   :config
   ;; Find what we need on $PATH.
   (setq picolisp-pil-executable       "pil"
