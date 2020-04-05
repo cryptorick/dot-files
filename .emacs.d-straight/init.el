@@ -45,6 +45,7 @@
 (use-package setup-look)
 (use-package setup-theme)
 (use-package setup-browser)
+(use-package setup-eshell)
 
 
 ;;----------------------------------------------------------------------
@@ -164,6 +165,14 @@ Inserted by installing org-mode or when a release is made."
   :straight t
   :after ox)
 
+(use-package org-bullets
+  :straight (org-bullets :type git :host github :repo "Kaligule/org-bullets")
+  :hook (org-mode . org-bullets-mode)
+  :config
+  (setq org-hide-leading-stars t))
+
+(use-package org-indent-mode :hook org-mode)
+
 (use-package ox-mediawiki :straight t)
 
 
@@ -239,6 +248,11 @@ Inserted by installing org-mode or when a release is made."
 (use-package setup-windoze
   :if (eq 'windows-nt system-type))
 
+(use-package ws-butler
+  :straight (ws-butler :type git :host github :repo "lewang/ws-butler")
+  :config
+  (add-hook 'prog-mode-hook #'ws-butler-mode))
+
 (defun unfill-region (beg end)
   "Unfill the region, joining text paragraphs into a single
 logical line.
@@ -250,36 +264,6 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
 
 (define-key global-map "\C-\M-Q" 'unfill-region)
 
-(use-package term  ; emacs provided
-  :config
-  ;; Kill the term buffer when you exit the shell. (That's how eshell
-  ;; does it and how terminal emulator programs outside of Emacs do
-  ;; it, and I like that.)
-  (defadvice term-handle-exit
-      (after term-kill-buffer-on-exit activate)
-    (kill-buffer)))
-
-;; (use-package xterm-color
-;;   :straight t
-;;   :config
-;;   ;; Instructions from: https://github.com/atomontage/xterm-color
-;;   ;; Don't forget to set TERM accordingly (xterm-256color).
-;;   (setq comint-output-filter-functions
-;;         (remove 'ansi-color-process-output comint-output-filter-functions))
-;;   (add-hook 'shell-mode-hook
-;;     (lambda () (add-hook 'comint-preoutput-filter-functions 'xterm-color-filter nil t)))
-;; )
-(use-package eterm-256color
-  :straight (:host github
-             :branch "devel"
-             :repo "dieggsy/eterm-256color"
-             :files ("eterm-256color.el" "eterm-256color.ti"))
-  :hook (term-mode . eterm-256color-mode))
-(use-package xterm-color
-  :straight t
-  :commands xterm-color-filter
-  :hook ((eshell-before-prompt . (lambda ()
-                                   (setq xterm-color-preserve-properties t)))))
 
 (use-package clojure-mode
   :straight t
@@ -404,6 +388,24 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
       (def-pil-indent until 1)
       (def-pil-indent unless 1)
       (def-pil-indent let? 2))))
+
+(use-package ess
+  :straight t
+  :bind (:map ess-mode-map
+         ("<C-return>" . ess-eval-region-or-line-and-step)
+         ("C-x C-e" . ess-eval-paragraph))
+  :config
+  (when (eq 'windows-nt system-type)
+    (setq-default inferior-R-program-name
+                  (expand-file-name "C:/Progra~1/R/R-3.6.2/bin/x64/Rterm.exe")))
+  (require 'ess-site)
+  (setq ess-eval-visibly nil
+        ess-tab-complete-in-script t)
+  (add-hook 'ess-r-mode-hook
+            (lambda ()
+              ;; don't indent comments with a single #.
+              (setq-default ess-indent-with-fancy-comments nil)
+              (ess-set-style 'RStudio))))
 
 (use-package lsp-mode :straight t)
 
