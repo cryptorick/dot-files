@@ -2,7 +2,20 @@
 	name = cryptorick
 	email = cryptorick@users.noreply.github.com
 [alias]
-	lol = log --all --pretty=oneline --abbrev-commit --graph --decorate
+	lol = log --pretty=oneline --abbrev-commit --graph --decorate
+	lola = log --all --pretty=oneline --abbrev-commit --graph --decorate
+	list-children = "!f() { git rev-list --all --not $1^@ --children | grep $(git rev-parse $1); }; f" # reachable children of a ref
+	find-common-ancestor = "!f() { git merge-base $1 $2; }; f"
+	list-remote-branches = "!f() { git branch -a | cut -c 3- | cut -d' ' -f1 | grep ^remotes/ | cut -d/ -f 2- | grep -Ev '/HEAD$'; }; f"
+	prune-remote-branch-references = "!f() { git fetch --prune; }; f"
+	delete-local-branch = "!f() { branch=$1; git branch -d $branch; }; f"
+	delete-remote-branch = "!f() { remote=$1; branch=$2; git push $remote --delete $branch; }; f"
+	list-aliases = "!f() { git config --list | grep alias.; }; f"
+;; For Winders:
+; [core]
+; 	autocrlf = true
+; [credential]
+; 	helper = manager
 [color]
       ui = true
 [color "status"]
@@ -18,3 +31,9 @@
       remotebranch = "#ffa07a"
       local = "#0000ff bold"
       branch = "#98fb98 bold"
+;; Don't rememebr why I needed this on one machince.
+; [filter "lfs"]
+; 	clean = git-lfs clean -- %f
+; 	smudge = git-lfs smudge -- %f
+; 	process = git-lfs filter-process
+; 	required = true
