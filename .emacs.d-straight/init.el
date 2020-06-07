@@ -42,7 +42,7 @@
 ;; Here's where the `setup-*` (and my other) packages are located.
 (add-to-list 'load-path
   (file-name-as-directory (concat user-emacs-directory "lisp")))
-(use-package setup-look)
+(use-package setup-look :defer 1)
 (use-package setup-theme)
 (use-package setup-browser)
 (use-package setup-eshell)
@@ -253,6 +253,9 @@ Inserted by installing org-mode or when a release is made."
   :config
   (add-hook 'prog-mode-hook #'ws-butler-mode))
 
+(use-package htmlize
+  :straight (htmlize :type git :host github :repo "hniksic/emacs-htmlize"))
+
 (defun unfill-region (beg end)
   "Unfill the region, joining text paragraphs into a single
 logical line.
@@ -389,28 +392,10 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
       (def-pil-indent unless 1)
       (def-pil-indent let? 2))))
 
-(use-package ess
-  :straight t
-  :bind (:map ess-mode-map
-         ("<C-return>" . ess-eval-region-or-line-and-step)
-         ("C-x C-e" . ess-eval-paragraph))
-  :config
-  (when (eq 'windows-nt system-type)
-    (setq-default inferior-R-program-name
-                  (expand-file-name "C:/Progra~1/R/R-3.6.2/bin/x64/Rterm.exe")))
-  (require 'ess-site)
-  (setq ess-eval-visibly nil
-        ess-tab-complete-in-script t)
-  (add-hook 'ess-r-mode-hook
-            (lambda ()
-              ;; don't indent comments with a single #.
-              (setq-default ess-indent-with-fancy-comments nil)
-              (ess-set-style 'RStudio))))
 
-(use-package lsp-mode :straight t)
+(use-package vterm :disabled
+    :straight t)
 
-(use-package lsp-julia
-  :straight (lsp-julia :type git :host github :repo "non-Jedi/lsp-julia"))
 
 ;; (use-package julia-mode
 ;;   :straight (julia-mode :type git :host github :repo "JuliaEditorSupport/julia-emacs")
@@ -424,13 +409,71 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
 ;;   :straight t
 ;;   :requires (julia-mode))
 
-(use-package ess-julia 
-  :straight ess
-  :config
-  (add-hook 'ess-julia-mode-hook #'lsp-mode))
+;; (use-package ess-julia
+;;   :straight ess
+;;   :config
+;;   (add-hook 'ess-julia-mode-hook #'lsp-mode))
 
 ;; test: (assoc "\\.jl\\'" auto-mode-alist)
 ;; should say: ("\\.jl\\'" . ess-julia-mode)
+
+;; (use-package julia-mode
+;;   :straight (julia-mode :type git :host github :repo "JuliaEditorSupport/julia-emacs"))
+
+(defun rkh/julia-wrapper-config ()
+  (when (eq 'windows-nt system-type)
+    (setq windoze-julia-repl-wrapper
+          (make-temp-file "" nil "-windoze-julia-repl-wrapper.jl"
+                          "using Base: stdin, stdout, stderr
+using REPL.Terminals: TTYTerminal
+using REPL: BasicREPL, run_repl
+
+run_repl(BasicREPL(TTYTerminal(\"emacs\",stdin,stdout,stderr)))"))
+    (setq inferior-julia-args (concat "-L " windoze-julia-repl-wrapper))))
+
+(use-package ess-julia
+  :straight ess
+  ;;:config
+  ;;(setq inferior-julia-program-name (executable-find "julia"))
+  ;;(setq inferior-julia-args "-i --color=yes -e \"ENV[\\\"TERM\\\"]=\\\"emacs\\\"\"")
+  ;; (rkh/julia-wrapper-config) ; w/o this, Julia REPL hangs in inferior lisp buffer.
+  )
+
+(use-package julia-repl
+  :straight (julia-repl :type git :host github :repo "tpapp/julia-repl")
+  :config
+  (add-hook 'ess-julia-mode-hook #'julia-repl-mode))
+;; test: (assoc "\\.jl\\'" auto-mode-alist)
+;; should say: ("\\.jl\\'" . julia-mode)
+
+(use-package ess
+  :straight t
+  :bind (:map ess-mode-map
+         ("<C-return>" . ess-eval-region-or-line-and-step)
+         ("C-x C-e" . ess-eval-paragraph))
+  :config
+  (when (eq 'windows-nt system-type)
+    (setq-default inferior-ess-r-program
+                  (expand-file-name "C:/Progra~1/R/R-3.6.3/bin/x64/Rterm.exe")
+                  inferior-R-args "--no-save"))
+  (require 'ess-site)
+  (setq ess-eval-visibly nil
+        ess-tab-complete-in-script t)
+  (add-hook 'ess-r-mode-hook
+            (lambda ()
+              ;; don't indent comments with a single #.
+              (setq-default ess-indent-with-fancy-comments nil)
+              ;; treat underscore as part of a "word".
+              (modify-syntax-entry ?_ "w" ess-r-mode-syntax-table)
+              (ess-set-style 'RStudio))))
+
+(use-package lsp-mode :straight t)
+
+(use-package lsp-julia
+  :straight (lsp-julia :type git :host github :repo "non-Jedi/lsp-julia")
+  :init
+  (setq lsp-julia-package-dir nil))
+
 
 ;; Doesn't seem to work. I seems to contact the server but nothing
 ;; gets pulled down. Idk why.
@@ -728,6 +771,6 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
 
 ;; The command =emacsclient -a "" -c= seems to start a server for you,
 ;; i.e., no need for the following lines.
-;; (use-package server :demand
-;;   :config
-;;   (or (eq t (server-running-p)) (server-start)))
+(use-package server :demand
+  :config
+  (or (eq t (server-running-p)) (server-start)))

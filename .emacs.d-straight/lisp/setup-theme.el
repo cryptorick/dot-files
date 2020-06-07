@@ -54,7 +54,7 @@
   (setq modus-operandi-theme-slanted-constructs nil)
   (setq modus-operandi-theme-bold-constructs nil))
 
-(setq rkh/dark-theme 'naquadah
+(setq rkh/dark-theme 'modus-vivendi
       rkh/light-theme 'modus-operandi) ;;'solarized-light)
 
 (defun load-dark-theme ()
