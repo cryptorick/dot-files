@@ -16,24 +16,31 @@
 ; 	autocrlf = true
 ; [credential]
 ; 	helper = manager
+;; For Unix-like
+; [credential]
+;	helper = store
 [color]
-      ui = true
+	ui = true
 [color "status"]
-      untracked = cyan
-      changed = "#ffa500"
-      added = "#7fff00"
+	untracked = cyan
+	changed = "#ff3300"
+	added = "#7fff00"
 [color "diff"]
-      new = "#ffffff #008800"
-      old = "#ffffff #aa0000"
-[color "branch"]
-      remote = "#ff3300"
-[color "decorate"]
-      remotebranch = "#ffa07a"
-      local = "#0000ff bold"
-      branch = "#98fb98 bold"
-;; Don't rememebr why I needed this on one machince.
+	old = "#333333 #ffafaf"  ; for light themes
+	new = "#333333 #afffaf"  ; for light themes
+;	new = "#ffffff #008800"  ; for dark themes
+;	old = "#ffffff #aa0000"  ; for dark themes
+;[color "branch"]
+;	remote = "#ff3300"
+;[color "decorate"]
+;	remotebranch = "#ffa07a"
+;	local = "#0000ff bold"
+;	branch = "#98fb98 bold"
+;; Don't remember why I needed this on one machine.
 ; [filter "lfs"]
 ; 	clean = git-lfs clean -- %f
 ; 	smudge = git-lfs smudge -- %f
 ; 	process = git-lfs filter-process
 ; 	required = true
+[pull]
+	ff = only
