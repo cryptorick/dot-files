@@ -1,0 +1,4 @@
+COLOR_USER=$(_fgcolor 9)
+COLOR_HOST=$(_fgcolor 202)
+COLOR_PWD=$(_fgcolor 17)
+COLOR_GIT=$(_fgcolor 129)
