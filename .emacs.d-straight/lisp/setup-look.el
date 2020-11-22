@@ -26,7 +26,15 @@
   ;; (set-face-attribute 'default nil :font "Hack:size=14")
 
   (unless (eq 'windows-nt system-type)
-    (set-face-attribute 'default nil :font "Hack:size=14"))
+    ;;(set-face-attribute 'default nil :font "Hack:size=16")
+    ;; (set-face-attribute 'default nil :font (font-spec :family "Iosevka Term" :size 11.7 :weight 'normal))
+    ;; (set-face-attribute 'fixed-pitch nil :font (font-spec :family "Iosevka Term" :size 11.7 :weight 'normal))
+    ;; (set-face-attribute 'variable-pitch nil :font (font-spec :family "Cantarell" :size 14.0 :weight 'normal))
+
+    (set-face-attribute 'default nil :font "Iosevka Term" :height 135)  ;:font "Fira Code Retina"
+    (set-face-attribute 'fixed-pitch nil :font "Iosevka Term" :height 130)  ;:font "Fira Code Retina"
+    (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 130 :weight 'regular)
+    )
 
   (when (eq 'windows-nt system-type)
     (setq rkh/normal-font (font-spec :family "Iosevka SS12 Medium" :size 16)
@@ -43,6 +51,18 @@
     (defun rkh/big-font () (interactive) (rkh/set-font rkh/big-font))
     (rkh/normal-font))
   )
+
+(use-package doom-modeline
+  :straight (:type git :host github :repo "seagle0128/doom-modeline")
+  :hook (after-init . doom-modeline-mode)
+  :custom ((doom-modeline-height 15)))
+
+;; Beacon highlights the current line in the buffer
+(use-package beacon
+   :straight t
+   :config
+   (beacon-mode 1))
+(global-hl-line-mode t)
 
 ;; Display date and time right-justified on the modeline.
 ;;   - From Alan Schmitt's (https://github.com/brabalan) comment on

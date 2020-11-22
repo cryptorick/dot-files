@@ -42,7 +42,7 @@
 ;; Here's where the `setup-*` (and my other) packages are located.
 (add-to-list 'load-path
   (file-name-as-directory (concat user-emacs-directory "lisp")))
-(use-package setup-look :defer 1)
+(use-package setup-look)
 (use-package setup-theme)
 (use-package setup-browser)
 (use-package setup-eshell)
@@ -116,6 +116,12 @@ Inserted by installing org-mode or when a release is made."
 
 (provide 'org-version)
 
+;; All functions with prefix =efs/= stolen from "Emacs from Scratch". :D
+(defun efs/org-mode-setup ()
+  (org-indent-mode)
+  (variable-pitch-mode 1)
+  (visual-line-mode 1))
+
 (use-package org
   :straight org-plus-contrib
   :commands (org-agenda org-agenda-list)
@@ -126,6 +132,7 @@ Inserted by installing org-mode or when a release is made."
          ("\C-c b" . org-iswitchb)
          ("<f9>"   . org-agenda)
          ("<f12>"  . org-capture))
+  :hook (org-mode . efs/org-mode-setup)
   :config
   (require 'org-tempo)  ; for insertion of blocks, a la type "<s" then hit TAB.
   (use-package setup-org))
@@ -229,6 +236,9 @@ Inserted by installing org-mode or when a release is made."
   :straight t
   :config (which-key-mode))
 
+(use-package ranger
+  :straight t)
+
 (use-package magit
   :straight t
   :bind ("C-x g" . magit-status))
@@ -256,6 +266,21 @@ Inserted by installing org-mode or when a release is made."
 (use-package htmlize
   :straight (htmlize :type git :host github :repo "hniksic/emacs-htmlize"))
 
+(use-package csv-mode
+  :straight t
+  :mode "\\.[Cc][Ss][Vv]\\'")
+
+(use-package visual-fill-column
+  :straight t)
+
+;; doesn't work. need to investigate when I get time.
+(defun orgtable-to-csv (pt mrk)
+  (interactive "r")
+  (save-excursion
+    (let ((table (buffer-substring-no-properties pt mrk)))
+      (orgtbl-to-csv table))))
+
+
 (defun unfill-region (beg end)
   "Unfill the region, joining text paragraphs into a single
 logical line.
@@ -267,6 +292,14 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
 
 (define-key global-map "\C-\M-Q" 'unfill-region)
 
+(use-package shell
+  :config
+  (unless (eq 'windows-nt system-type)
+    (setq explicit-mksh-args '("-l"))))
+
+
+;;----------------------------------------------------------------------
+;; Languages
 
 (use-package clojure-mode
   :straight t
@@ -393,9 +426,19 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
       (def-pil-indent let? 2))))
 
 
-(use-package vterm :disabled
-    :straight t)
+(use-package vterm
+  :unless (eq 'windows-nt system-type)  ; doesn't work under winders.
+  :straight t
+  :config
+  (setq vterm-shell "/bin/mksh -l"
+        vterm-kill-buffer-on-exit t)
+  (define-key global-map (kbd "<f7>") 'vterm))
 
+(use-package julia-snail
+  ;; Haven't tested this on Windoze yet. Uncomment next line if it doesn't.
+  ;;:unless (eq 'windows-nt system-type)  ; doesn't work under winders.
+  :straight t
+  :hook (julia-mode . julia-snail-mode))
 
 ;; (use-package julia-mode
 ;;   :straight (julia-mode :type git :host github :repo "JuliaEditorSupport/julia-emacs")
@@ -417,29 +460,29 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
 ;; test: (assoc "\\.jl\\'" auto-mode-alist)
 ;; should say: ("\\.jl\\'" . ess-julia-mode)
 
-;; (use-package julia-mode
-;;   :straight (julia-mode :type git :host github :repo "JuliaEditorSupport/julia-emacs"))
+(use-package julia-mode :disabled
+  :straight (julia-mode :type git :host github :repo "JuliaEditorSupport/julia-emacs"))
 
-(defun rkh/julia-wrapper-config ()
-  (when (eq 'windows-nt system-type)
-    (setq windoze-julia-repl-wrapper
-          (make-temp-file "" nil "-windoze-julia-repl-wrapper.jl"
-                          "using Base: stdin, stdout, stderr
-using REPL.Terminals: TTYTerminal
-using REPL: BasicREPL, run_repl
+;; (defun rkh/julia-wrapper-config ()
+;;   (when (eq 'windows-nt system-type)
+;;     (setq windoze-julia-repl-wrapper
+;;           (make-temp-file "" nil "-windoze-julia-repl-wrapper.jl"
+;;                           "using Base: stdin, stdout, stderr
+;; using REPL.Terminals: TTYTerminal
+;; using REPL: BasicREPL, run_repl
 
-run_repl(BasicREPL(TTYTerminal(\"emacs\",stdin,stdout,stderr)))"))
-    (setq inferior-julia-args (concat "-L " windoze-julia-repl-wrapper))))
+;; run_repl(BasicREPL(TTYTerminal(\"emacs\",stdin,stdout,stderr)))"))
+;;     (setq inferior-julia-args (concat "-L " windoze-julia-repl-wrapper))))
 
-(use-package ess-julia
-  :straight ess
-  ;;:config
-  ;;(setq inferior-julia-program-name (executable-find "julia"))
-  ;;(setq inferior-julia-args "-i --color=yes -e \"ENV[\\\"TERM\\\"]=\\\"emacs\\\"\"")
-  ;; (rkh/julia-wrapper-config) ; w/o this, Julia REPL hangs in inferior lisp buffer.
-  )
+;; (use-package ess-julia
+;;   :straight ess
+;;   ;;:config
+;;   ;;(setq inferior-julia-program-name (executable-find "julia"))
+;;   ;;(setq inferior-julia-args "-i --color=yes -e \"ENV[\\\"TERM\\\"]=\\\"emacs\\\"\"")
+;;   ;; (rkh/julia-wrapper-config) ; w/o this, Julia REPL hangs in inferior lisp buffer.
+;;   )
 
-(use-package julia-repl
+(use-package julia-repl :disabled
   :straight (julia-repl :type git :host github :repo "tpapp/julia-repl")
   :config
   (add-hook 'ess-julia-mode-hook #'julia-repl-mode))
@@ -454,11 +497,11 @@ run_repl(BasicREPL(TTYTerminal(\"emacs\",stdin,stdout,stderr)))"))
   :config
   (when (eq 'windows-nt system-type)
     (setq-default inferior-ess-r-program
-                  (expand-file-name "C:/Progra~1/R/R-3.6.3/bin/x64/Rterm.exe")
-                  inferior-R-args "--no-save"))
+                  (expand-file-name "C:/Progra~1/R/R-3.6.3/bin/x64/Rterm.exe")))
   (require 'ess-site)
   (setq ess-eval-visibly nil
-        ess-tab-complete-in-script t)
+        ess-tab-complete-in-script t
+        inferior-R-args "--no-save")
   (add-hook 'ess-r-mode-hook
             (lambda ()
               ;; don't indent comments with a single #.
@@ -467,13 +510,25 @@ run_repl(BasicREPL(TTYTerminal(\"emacs\",stdin,stdout,stderr)))"))
               (modify-syntax-entry ?_ "w" ess-r-mode-syntax-table)
               (ess-set-style 'RStudio))))
 
-(use-package lsp-mode :straight t)
+(use-package lsp-mode :disabled
+  :straight t)
 
-(use-package lsp-julia
+(use-package lsp-julia :disabled
   :straight (lsp-julia :type git :host github :repo "non-Jedi/lsp-julia")
   :init
   (setq lsp-julia-package-dir nil))
 
+(use-package jupyter
+  :straight t
+  :config
+  (setq inferior-julia-program-name (executable-find "julia")))
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (julia . t)
+   (python . t)
+   (jupyter . t)))
 
 ;; Doesn't seem to work. I seems to contact the server but nothing
 ;; gets pulled down. Idk why.
