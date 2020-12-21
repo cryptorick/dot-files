@@ -118,9 +118,16 @@ Inserted by installing org-mode or when a release is made."
 
 ;; All functions with prefix =efs/= stolen from "Emacs from Scratch". :D
 (defun efs/org-mode-setup ()
+  (interactive)
   (org-indent-mode)
   (variable-pitch-mode 1)
   (visual-line-mode 1))
+
+(defun rkh/disable-org-mode-setup ()
+  (interactive)
+  (variable-pitch-mode 0)
+  (visual-line-mode 0)
+  (visual-fill-column-mode 0))
 
 (use-package org
   :straight org-plus-contrib
@@ -178,6 +185,15 @@ Inserted by installing org-mode or when a release is made."
   :config
   (setq org-hide-leading-stars t))
 
+(defun efs/org-mode-visual-fill ()
+  (setq visual-fill-column-width 100
+        visual-fill-column-center-text t)
+  (visual-fill-column-mode 1))
+
+(use-package visual-fill-column
+  :straight t
+  :hook (org-mode . efs/org-mode-visual-fill))
+
 (use-package org-indent-mode :hook org-mode)
 
 (use-package ox-mediawiki :straight t)
@@ -195,15 +211,36 @@ Inserted by installing org-mode or when a release is made."
   :config
   (ivy-mode 1))
 
-(use-package counsel :disabled
+(use-package counsel
   :straight t
-  :bind* (("C-x C-f" . counsel-find-file)
-          ("C-s"     . swiper))
+  :bind (("M-x" . counsel-M-x)
+         ("C-x b" . counsel-ibuffer)
+         ("C-x C-f" . counsel-find-file))
+  ;; :bind* (("C-x C-f" . counsel-find-file)
+  ;;         ("C-s"     . swiper))
   :config
   (ivy-add-actions
    'counsel-find-file
    '(("f" find-file-other-frame "other frame")
      ("d" delete-file "delete"))))
+
+(use-package ivy-rich
+  :straight t
+  :after counsel
+  :init
+  ;;(use-package counsel :straight t)
+  (ivy-rich-mode 1))
+
+(use-package helpful
+  :straight t
+  :custom
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable)
+  :bind
+  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-command] . helpful-command)
+  ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-key] . helpful-key))
 
 (use-package ace-window :disabled ; in favor of exwm workflow
   :straight t
@@ -241,7 +278,15 @@ Inserted by installing org-mode or when a release is made."
 
 (use-package magit
   :straight t
-  :bind ("C-x g" . magit-status))
+  :bind ("C-x g" . magit-status)
+  :custom
+  ((magit-auto-revert t)
+   (transient-show-popup 1)))
+
+;; (use-package autorevert
+;;   :custom
+;;   ((auto-revert-check-vc-info t)
+;;    (auto-revert-interval 2)))
 
 (use-package git-gutter
   :straight t
@@ -250,6 +295,9 @@ Inserted by installing org-mode or when a release is made."
 (use-package markdown-mode
   :straight t
   :mode "\\.md\\'")
+
+(use-package display-line-numbers
+  :config (add-hook 'prog-mode-hook #'display-line-numbers-mode))
 
 (use-package rainbow-delimiters
   :straight t
@@ -272,6 +320,119 @@ Inserted by installing org-mode or when a release is made."
 
 (use-package visual-fill-column
   :straight t)
+
+;; This is from Protesilaos, but I can't tell the difference visually.
+(use-package emacs
+  :config
+  (setq window-divider-default-right-width 1)
+  (setq window-divider-default-bottom-width 1)
+  (setq window-divider-default-places 'right-only)
+  :hook (after-init-hook . window-divider-mode))
+
+;; From Protesilaos
+(use-package windmove
+  :config
+  (setq windmove-create-window nil)     ; Emacs 27.1
+  )
+
+;; From Protesilaos
+(use-package transpose-frame
+  :straight t
+  :commands (transpose-frame
+             flip-frame
+             flop-frame
+             rotate-frame
+             rotate-frame-clockwise
+             rotate-frame-anticlockwise))
+
+(use-package tab-bar
+  :init
+  (setq tab-bar-close-button-show nil)
+  (setq tab-bar-close-last-tab-choice 'tab-bar-mode-disable)
+  (setq tab-bar-close-tab-select 'recent)
+  (setq tab-bar-new-tab-choice t)
+  (setq tab-bar-new-tab-to 'right)
+  (setq tab-bar-position nil)
+  (setq tab-bar-show nil)
+  (setq tab-bar-tab-hints nil)
+  (setq tab-bar-tab-name-function 'tab-bar-tab-name-all)
+  :config
+  (tab-bar-mode -1)
+  (tab-bar-history-mode -1))
+
+(use-package window
+  :init
+  (setq display-buffer-alist
+        '(;; top side window (NONE for now. --rkh)
+          ;; bottom side window
+          ("\\*\\(Output\\|Register Preview\\).*"
+           (display-buffer-in-side-window)
+           (window-width . 0.16)       ; See the :hook
+           (side . bottom)
+           (slot . -1)
+           (window-parameters . ((no-other-window . t))))
+          ("\\*\\(Completions\\|Embark Live Occur\\).*"
+           (display-buffer-in-side-window)
+           (window-height . 0.16)
+           (side . bottom)
+           (slot . 0)
+           (window-parameters . ((no-other-window . t))))
+          ;; left side window
+          ;; right side window
+          ("\\(\\*R:\\|magit: \\).+"
+           (display-buffer-in-side-window)
+           (window-width . 0.45)
+           (side . right)
+           (slot . 0)
+           (window-parameters
+            . ((no-other-window . t)
+               (mode-line-format
+                . (" "
+                   mode-line-buffer-identification)))))
+          (".*\\(e?shell\\|vterm\\).*"
+           (display-buffer-in-side-window)
+           (window-width . 0.45)
+           (window-height . 0.30)
+           (side . right)
+           (slot . 1))
+          ;; bottom buffer (NOT side window)
+          ("\\*\\vc-\\(incoming\\|outgoing\\).*"
+           (display-buffer-at-bottom))))
+  (setq window-combination-resize t)
+  (setq even-window-sizes 'height-only)
+  (setq window-sides-vertical nil)
+  (setq switch-to-buffer-in-dedicated-window 'pop)
+  ;; Hooks' syntax is controlled by the `use-package-hook-name-suffix'
+  ;; variable.  The "-hook" suffix is intentional.
+  :hook ((help-mode-hook . visual-line-mode)
+         (custom-mode-hook . visual-line-mode)))
+
+(defun rkh/press-return-and-move-up ()
+  "Use this when you need to run a some command in the
+shell (like curl) and quickly get back to the inferior R buffer,
+to wait on a breakpoint when debugging (which could occur very
+quickly, fsater than you/I can switch to the R window manually."
+  (interactive)
+  (eshell-send-input)
+  (windmove-up))
+
+(defhydra hydra-winders-helper (global-map "C-z")
+  "windmove"
+  ("<up>" windmove-up)
+  ("<right>" windmove-right)
+  ("<down>" windmove-down)
+  ("<left>" windmove-left)
+  ("t" flop-frame) ; what I consider "transpose" in this context
+  ("r" rotate-frame-clockwise)
+  ("R" rotate-frame-anticlockwise)
+  ("<tab>" tab-next)
+  ("<backtab>" tab-previous)
+  ;; ("C-x _" balance-windows)
+  ;; ("C-x +" balance-windows-area)
+  ("q" window-toggle-side-windows)
+  ("<return>" rkh/press-return-and-move-up)
+  ("C-z" nil))
+
 
 ;; doesn't work. need to investigate when I get time.
 (defun orgtable-to-csv (pt mrk)
@@ -526,9 +687,17 @@ Source: https://www.emacswiki.org/emacs/UnfillRegion"
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((emacs-lisp . t)
+   (shell . t)
+   (R . t)
    (julia . t)
    (python . t)
    (jupyter . t)))
+
+
+(use-package eglot
+  :straight (eglot :type git :host github :repo "joaotavora/eglot")
+  :commands (eglot))
+
 
 ;; Doesn't seem to work. I seems to contact the server but nothing
 ;; gets pulled down. Idk why.
