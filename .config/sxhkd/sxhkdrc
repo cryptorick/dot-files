@@ -4,7 +4,7 @@
 
 # terminal emulator [Rick: added shift+RETURN; muscle memory.]
 super + {_,shift + }Return
-	st -f terminus:size=12 -g 156x56 -e mksh -l
+	xst -A 220 -f "Iosevka Term:size=10.5" -g 156x56 -e mksh -l
 #	/usr/home/rick/builds/xst/xst -A 220 -f terminus:size=12 -g 156x56 -e mksh -l
 #	urxvt -bg black -fg grey80 -geometry 156x52 -vb
 #	st -f terminus:size=12
@@ -167,6 +167,14 @@ super + alt + {_,shift + }r
 
 super + x; e
 	emacs
+super + x; f
+	firefox
+super + x; c
+	chromium
+super + Print
+	flameshot gui
+super + Pause
+	slock
 # Music player
 super + x; m
 	st mocp
